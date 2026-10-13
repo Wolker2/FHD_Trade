@@ -1,0 +1,5310 @@
+BV ^{
+    OnLoad ^{
+        FHDTradeAutoLayoutInit ~{
+            000=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Layout.Bootstrap'));
+        }
+    }
+    OnStart ^{
+        FHDTradeAutoLayoutInit ~{
+            000=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Layout.Bootstrap'));
+        }
+    }
+}
+ML ^{
+    FHDTradeShopTable ^{
+        Border=0,0,1024,768
+        CodeBeforeRun ~{
+            001=int screenX=GetGameOptions('ResolutionX');
+            002=int screenY=GetGameOptions('ResolutionY');
+            003=CustomInterfaceSize('MainPanel',screenX,screenY);
+            004=CustomInterfaceSize('BGBuf',screenX,screenY);
+            005=CustomInterfacePos('Window',(screenX-960)/2,(screenY-680)/2);
+            006=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.FillShopForm'));
+            007=int frameH=min(776,screenY);CustomInterfaceSize('MGFHUDFrame',998,frameH);CustomInterfacePos('MGFHUDFrame',(screenX-998)/2,(screenY-frameH)/2);
+        }
+        Panel ^{
+            GraphBuf ^{
+                Name=BGBuf
+                Pos=0,0,9
+                Size=1024,768
+            }
+            Image ~{
+                Image=GI,Bm.FHD_Trade.TableBackground
+                MouseBlocking=False
+                Name=MGFHUDFrame
+                Pos=0,0,-1
+                Size=998,776
+            }
+            Name=MainPanel
+            Panel ^{
+                GraphButton ^{
+                    Caption=А-Я
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortAlpha
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortAlpha
+                    OnPressCode ~{
+                        00=CloseCustomForm(101);
+                    }
+                    Pos=22,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=ПРИБЫЛЬ
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortProfit
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortProfit
+                    OnPressCode ~{
+                        00=CloseCustomForm(102);
+                    }
+                    Pos=116,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=НОВЫЙ ПОИСК
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.ButMarketGoodsFinder
+                    ImageDown=GI,Bm.FHD_Trade.2FindD
+                    ImageNormal=GI,Bm.FHD_Trade.2FindN
+                    ImageNormalA=GI,Bm.FHD_Trade.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MarketGoodsFinderMarketButtonAction
+                    OnPressCode ~{
+                        00=CloseCustomForm(103);
+                    }
+                    Pos=210,642,-3
+                    Size=100,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageLeft
+                    ImageDown=GI,Bm.FormCount2.2SubD
+                    ImageNormal=GI,Bm.FormCount2.2SubN
+                    ImageNormalA=GI,Bm.FormCount2.2SubA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageLeft
+                    OnPressCode ~{
+                        00=CloseCustomForm(104);
+                    }
+                    Pos=424,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageRight
+                    ImageDown=GI,Bm.FormCount2.2AddD
+                    ImageNormal=GI,Bm.FormCount2.2AddN
+                    ImageNormalA=GI,Bm.FormCount2.2AddA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageRight
+                    OnPressCode ~{
+                        00=CloseCustomForm(105);
+                    }
+                    Pos=535,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFTableClose
+                    ImageDown=GI,Bm.FormCount2.2CloseD
+                    ImageNormal=GI,Bm.FormCount2.2CloseN
+                    ImageNormalA=GI,Bm.FormCount2.2CloseA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableClose
+                    OnPressCode ~{
+                        00=CloseCustomForm(1);
+                    }
+                    Pos=878,642,-3
+                    Size=58,26
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction0
+                    OnPressCode ~{
+                        00=CloseCustomForm(200);
+                    }
+                    Pos=875,131,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction1
+                    OnPressCode ~{
+                        00=CloseCustomForm(201);
+                    }
+                    Pos=875,179,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction2
+                    OnPressCode ~{
+                        00=CloseCustomForm(202);
+                    }
+                    Pos=875,227,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction3
+                    OnPressCode ~{
+                        00=CloseCustomForm(203);
+                    }
+                    Pos=875,275,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction4
+                    OnPressCode ~{
+                        00=CloseCustomForm(204);
+                    }
+                    Pos=875,323,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction5
+                    OnPressCode ~{
+                        00=CloseCustomForm(205);
+                    }
+                    Pos=875,371,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction6
+                    OnPressCode ~{
+                        00=CloseCustomForm(206);
+                    }
+                    Pos=875,419,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction7
+                    OnPressCode ~{
+                        00=CloseCustomForm(207);
+                    }
+                    Pos=875,467,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction8
+                    OnPressCode ~{
+                        00=CloseCustomForm(208);
+                    }
+                    Pos=875,515,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction9
+                    OnPressCode ~{
+                        00=CloseCustomForm(209);
+                    }
+                    Pos=875,563,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Ranger
+                    Name=MGFTitle
+                    Pos=20,8,-2
+                    Size=920,30
+                    Text=СИСТЕМНЫЙ ТОРГОВЫЙ МОНИТОР
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFGoodsStatus
+                    Pos=24,44,-2
+                    Size=460,25
+                    Text=Товар: -
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Right
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFFoundStatus
+                    Pos=510,44,-2
+                    Size=420,25
+                    Text=Найдено: 0 вариантов
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourceSystem
+                    Pos=25,72,-2
+                    Size=350,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationSystem
+                    Pos=405,72,-2
+                    Size=300,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourcePlace
+                    Pos=25,92,-2
+                    Size=180,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderBuy
+                    Pos=210,92,-2
+                    Size=72,20
+                    Text=ПОКУПКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderStock
+                    Pos=285,92,-2
+                    Size=88,20
+                    Text=НАЛИЧИЕ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowOne
+                    Pos=375,92,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationPlace
+                    Pos=405,92,-2
+                    Size=190,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSell
+                    Pos=600,92,-2
+                    Size=75,20
+                    Text=ПРОДАЖА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowTwo
+                    Pos=678,92,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderProfit
+                    Pos=710,92,-2
+                    Size=140,20
+                    Text=ПРИБЫЛЬ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderMark
+                    Pos=858,92,-2
+                    Size=79,20
+                    Text=МЕТКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFHeaderLine
+                    Pos=20,108,-2
+                    Size=920,12
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0SourceSystem
+                    Pos=25,120,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0DestinationSystem
+                    Pos=405,120,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0SourcePlace
+                    Pos=25,138,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Buy
+                    Pos=210,138,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Stock
+                    Pos=285,138,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowOne
+                    Pos=375,138,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0DestinationPlace
+                    Pos=405,138,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Sell
+                    Pos=600,138,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowTwo
+                    Pos=678,138,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0Profit
+                    Pos=710,138,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine0
+                    Pos=20,162,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1SourceSystem
+                    Pos=25,168,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1DestinationSystem
+                    Pos=405,168,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1SourcePlace
+                    Pos=25,186,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Buy
+                    Pos=210,186,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Stock
+                    Pos=285,186,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowOne
+                    Pos=375,186,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1DestinationPlace
+                    Pos=405,186,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Sell
+                    Pos=600,186,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowTwo
+                    Pos=678,186,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1Profit
+                    Pos=710,186,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine1
+                    Pos=20,210,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2SourceSystem
+                    Pos=25,216,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2DestinationSystem
+                    Pos=405,216,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2SourcePlace
+                    Pos=25,234,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Buy
+                    Pos=210,234,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Stock
+                    Pos=285,234,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowOne
+                    Pos=375,234,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2DestinationPlace
+                    Pos=405,234,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Sell
+                    Pos=600,234,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowTwo
+                    Pos=678,234,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2Profit
+                    Pos=710,234,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine2
+                    Pos=20,258,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3SourceSystem
+                    Pos=25,264,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3DestinationSystem
+                    Pos=405,264,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3SourcePlace
+                    Pos=25,282,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Buy
+                    Pos=210,282,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Stock
+                    Pos=285,282,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowOne
+                    Pos=375,282,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3DestinationPlace
+                    Pos=405,282,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Sell
+                    Pos=600,282,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowTwo
+                    Pos=678,282,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3Profit
+                    Pos=710,282,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine3
+                    Pos=20,306,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4SourceSystem
+                    Pos=25,312,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4DestinationSystem
+                    Pos=405,312,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4SourcePlace
+                    Pos=25,330,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Buy
+                    Pos=210,330,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Stock
+                    Pos=285,330,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowOne
+                    Pos=375,330,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4DestinationPlace
+                    Pos=405,330,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Sell
+                    Pos=600,330,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowTwo
+                    Pos=678,330,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4Profit
+                    Pos=710,330,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine4
+                    Pos=20,354,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5SourceSystem
+                    Pos=25,360,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5DestinationSystem
+                    Pos=405,360,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5SourcePlace
+                    Pos=25,378,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Buy
+                    Pos=210,378,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Stock
+                    Pos=285,378,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowOne
+                    Pos=375,378,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5DestinationPlace
+                    Pos=405,378,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Sell
+                    Pos=600,378,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowTwo
+                    Pos=678,378,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5Profit
+                    Pos=710,378,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine5
+                    Pos=20,402,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6SourceSystem
+                    Pos=25,408,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6DestinationSystem
+                    Pos=405,408,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6SourcePlace
+                    Pos=25,426,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Buy
+                    Pos=210,426,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Stock
+                    Pos=285,426,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowOne
+                    Pos=375,426,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6DestinationPlace
+                    Pos=405,426,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Sell
+                    Pos=600,426,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowTwo
+                    Pos=678,426,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6Profit
+                    Pos=710,426,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine6
+                    Pos=20,450,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7SourceSystem
+                    Pos=25,456,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7DestinationSystem
+                    Pos=405,456,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7SourcePlace
+                    Pos=25,474,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Buy
+                    Pos=210,474,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Stock
+                    Pos=285,474,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowOne
+                    Pos=375,474,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7DestinationPlace
+                    Pos=405,474,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Sell
+                    Pos=600,474,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowTwo
+                    Pos=678,474,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7Profit
+                    Pos=710,474,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine7
+                    Pos=20,498,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8SourceSystem
+                    Pos=25,504,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8DestinationSystem
+                    Pos=405,504,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8SourcePlace
+                    Pos=25,522,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Buy
+                    Pos=210,522,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Stock
+                    Pos=285,522,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowOne
+                    Pos=375,522,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8DestinationPlace
+                    Pos=405,522,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Sell
+                    Pos=600,522,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowTwo
+                    Pos=678,522,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8Profit
+                    Pos=710,522,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine8
+                    Pos=20,546,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9SourceSystem
+                    Pos=25,552,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9DestinationSystem
+                    Pos=405,552,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9SourcePlace
+                    Pos=25,570,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Buy
+                    Pos=210,570,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Stock
+                    Pos=285,570,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowOne
+                    Pos=375,570,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9DestinationPlace
+                    Pos=405,570,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Sell
+                    Pos=600,570,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowTwo
+                    Pos=678,570,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9Profit
+                    Pos=710,570,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine9
+                    Pos=20,594,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFEmptyText
+                    Pos=40,260,-2
+                    Size=880,60
+                    TextColor=230,180,70
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFPageText
+                    Pos=450,638,-2
+                    Size=80,30
+                    Text=1 / 1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateGoods
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateSort
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStatePage
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateMode
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateStar
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Name=Window
+                Panel ^{
+                    Frame ^{
+                        Color=70,130,150
+                        ColorFill=15,26,38
+                        Fill=True
+                        Kind=Rect
+                        Name=MGFTableFill
+                        Pos=0,0,3
+                        Size=960,680
+                    }
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableBackground
+                    Pos=0,0,15
+                    Size=960,680
+                }
+                Pos=0,0,0
+                Size=960,680
+                Style=Style.Window.2Simple
+            }
+            Pos=0,0,0
+            Size=1024,768
+        }
+    }
+    Galaxy ^{
+        Panel ^{
+            Panel ^{
+            }
+            Panel ^{
+                Panel ^{
+                    Panel ^{
+                    }
+                    Panel ^{
+                    }
+                    Panel ^{
+                    }
+                    Panel ^{
+                    }
+                    Panel ^{
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark0
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark0
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark1
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark1
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark2
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark2
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark3
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark3
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark4
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark4
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark5
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark5
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark6
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark6
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark7
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark7
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark8
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark8
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerBuy
+                            Name=MGFBuyMark9
+                            Pos=0,0,-10
+                            Size=81,80
+                            MouseBlocking=False
+                        }
+                        Image ~{
+                            Active=False
+                            Image=GI,Bm.FHD_Trade.MarkerSell
+                            Name=MGFSellMark9
+                            Pos=0,0,-10
+                            Size=80,81
+                            MouseBlocking=False
+                        }
+                        Label ~{
+                            Active=False
+                            AlignX=Left
+                            AlignY=CenterEx
+                            Font=Font.2Small
+                            Name=MGFMarkerNext
+                            Pos=0,0
+                            Size=1,1
+                            Text=0
+                            TextColor=255,255,230
+                        }
+                        MouseBlocking=False
+                        Name=FHDTradeMarkerLayer
+                        Pos=0,0,0
+                        Size=768,527
+                    }
+                }
+                Panel ^{
+                }
+                Panel ^{
+                    GraphButton ^{
+                        Caption=
+                        CaptionAlignX=Center
+                        CaptionAlignY=CenterEx
+                        CaptionColorDown=255,255,230
+                        CaptionColorDownA=255,255,230
+                        CaptionColorNormal=255,255,230
+                        CaptionColorNormalA=255,255,230
+                        Font=Font.2SmallBold
+                        Help=Help.MGFClearMarks
+                        ImageDown=GI,Bm.FHD_Trade.2CloseD
+                        ImageNormal=GI,Bm.FHD_Trade.2CloseN
+                        ImageNormalA=GI,Bm.FHD_Trade.2CloseA
+                        Kind=Normal
+                        KindHit=Rect
+                        MouseBlocking=True
+                        MouseBlockingTest=False
+                        Name=MarketGoodsFinderClearButton
+                        OnPressCode ~{
+                            00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Markers.Clear'));
+                        }
+                        Pos=0,0,-1
+                        Size=63,27
+                        Style=Style.GB.SoundNormal
+                    }
+                    MouseBlocking=False
+                    Name=MarketGoodsFinderClearPanel
+                    Pos=670,8,-10
+                    Size=63,27
+                }
+            }
+        }
+    }
+    GoodsShop ^{
+        Panel ^{
+            MarketGoodsFinderMarketButton ^{
+                Panel ^{
+                    GraphButton ^{
+                        Caption=
+                        CaptionAlignX=Center
+                        CaptionAlignY=CenterEx
+                        CaptionColorDown=255,255,230
+                        CaptionColorDownA=255,255,230
+                        CaptionColorNormal=255,255,230
+                        CaptionColorNormalA=255,255,230
+                        Font=Font.2SmallBold
+                        Help=Help.ButMarketGoodsFinder
+                        ImageDown=GI,Bm.FHD_Trade.2SearchD
+                        ImageNormal=GI,Bm.FHD_Trade.2SearchN
+                        ImageNormalA=GI,Bm.FHD_Trade.2SearchA
+                        Kind=Normal
+                        KindHit=Rect
+                        MouseBlocking=True
+                        MouseBlockingTest=False
+                        Name=MarketGoodsFinderMarketButtonAction
+                        OnPressCode ~{
+                            00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.OpenMenu'),'form_name','GoodsShop');
+                        }
+                        Pos=0,0,-1
+                        Size=40,40
+                        Style=Style.GB.SoundNormal
+                    }
+                    Name=MarketGoodsFinderMarketButton
+                    Pos=492,62,-150
+                    PosAutoCorrection=True
+                    PosAutoCorrectionXCoef=0.5
+                    PosAutoCorrectionYCoef=0.5
+                    Size=40,40
+                }
+            }
+            Window ^{
+                Active=False
+                GraphButton ^{
+                    Caption=А-Я
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortAlpha
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortAlpha
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortAlpha'),'form_name','GoodsShop');
+                    }
+                    Pos=22,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=ПРИБЫЛЬ
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortProfit
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortProfit
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortProfit'),'form_name','GoodsShop');
+                    }
+                    Pos=116,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=НОВЫЙ ПОИСК
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.ButMarketGoodsFinder
+                    ImageDown=GI,Bm.FHD_Trade.2FindD
+                    ImageNormal=GI,Bm.FHD_Trade.2FindN
+                    ImageNormalA=GI,Bm.FHD_Trade.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MarketGoodsFinderMarketButtonAction
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.OpenMenu'),'form_name','GoodsShop');
+                    }
+                    Pos=210,642,-3
+                    Size=100,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageLeft
+                    ImageDown=GI,Bm.FormCount2.2SubD
+                    ImageNormal=GI,Bm.FormCount2.2SubN
+                    ImageNormalA=GI,Bm.FormCount2.2SubA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageLeft
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageLeft'),'form_name','GoodsShop');
+                    }
+                    Pos=424,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageRight
+                    ImageDown=GI,Bm.FormCount2.2AddD
+                    ImageNormal=GI,Bm.FormCount2.2AddN
+                    ImageNormalA=GI,Bm.FormCount2.2AddA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageRight
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageRight'),'form_name','GoodsShop');
+                    }
+                    Pos=535,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFTableClose
+                    ImageDown=GI,Bm.FormCount2.2CloseD
+                    ImageNormal=GI,Bm.FormCount2.2CloseN
+                    ImageNormalA=GI,Bm.FormCount2.2CloseA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableClose
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Close'),'form_name','GoodsShop');
+                    }
+                    Pos=878,642,-3
+                    Size=58,26
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction0
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',0);
+                    }
+                    Pos=875,131,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction1
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',1);
+                    }
+                    Pos=875,179,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction2
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',2);
+                    }
+                    Pos=875,227,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction3
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',3);
+                    }
+                    Pos=875,275,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction4
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',4);
+                    }
+                    Pos=875,323,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction5
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',5);
+                    }
+                    Pos=875,371,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction6
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',6);
+                    }
+                    Pos=875,419,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction7
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',7);
+                    }
+                    Pos=875,467,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction8
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',8);
+                    }
+                    Pos=875,515,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction9
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',9);
+                    }
+                    Pos=875,563,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Ranger
+                    Name=MGFTitle
+                    Pos=20,8,-2
+                    Size=920,30
+                    Text=СИСТЕМНЫЙ ТОРГОВЫЙ МОНИТОР
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFGoodsStatus
+                    Pos=24,44,-2
+                    Size=460,25
+                    Text=Товар: -
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Right
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFFoundStatus
+                    Pos=510,44,-2
+                    Size=420,25
+                    Text=Найдено: 0 вариантов
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourceSystem
+                    Pos=25,72,-2
+                    Size=350,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationSystem
+                    Pos=405,72,-2
+                    Size=300,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourcePlace
+                    Pos=25,92,-2
+                    Size=180,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderBuy
+                    Pos=210,92,-2
+                    Size=72,20
+                    Text=ПОКУПКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderStock
+                    Pos=285,92,-2
+                    Size=88,20
+                    Text=НАЛИЧИЕ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowOne
+                    Pos=375,92,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationPlace
+                    Pos=405,92,-2
+                    Size=190,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSell
+                    Pos=600,92,-2
+                    Size=75,20
+                    Text=ПРОДАЖА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowTwo
+                    Pos=678,92,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderProfit
+                    Pos=710,92,-2
+                    Size=140,20
+                    Text=ПРИБЫЛЬ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderMark
+                    Pos=858,92,-2
+                    Size=79,20
+                    Text=МЕТКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFHeaderLine
+                    Pos=20,108,-2
+                    Size=920,12
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0SourceSystem
+                    Pos=25,120,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0DestinationSystem
+                    Pos=405,120,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0SourcePlace
+                    Pos=25,138,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Buy
+                    Pos=210,138,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Stock
+                    Pos=285,138,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowOne
+                    Pos=375,138,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0DestinationPlace
+                    Pos=405,138,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Sell
+                    Pos=600,138,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowTwo
+                    Pos=678,138,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0Profit
+                    Pos=710,138,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine0
+                    Pos=20,162,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1SourceSystem
+                    Pos=25,168,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1DestinationSystem
+                    Pos=405,168,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1SourcePlace
+                    Pos=25,186,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Buy
+                    Pos=210,186,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Stock
+                    Pos=285,186,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowOne
+                    Pos=375,186,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1DestinationPlace
+                    Pos=405,186,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Sell
+                    Pos=600,186,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowTwo
+                    Pos=678,186,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1Profit
+                    Pos=710,186,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine1
+                    Pos=20,210,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2SourceSystem
+                    Pos=25,216,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2DestinationSystem
+                    Pos=405,216,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2SourcePlace
+                    Pos=25,234,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Buy
+                    Pos=210,234,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Stock
+                    Pos=285,234,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowOne
+                    Pos=375,234,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2DestinationPlace
+                    Pos=405,234,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Sell
+                    Pos=600,234,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowTwo
+                    Pos=678,234,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2Profit
+                    Pos=710,234,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine2
+                    Pos=20,258,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3SourceSystem
+                    Pos=25,264,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3DestinationSystem
+                    Pos=405,264,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3SourcePlace
+                    Pos=25,282,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Buy
+                    Pos=210,282,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Stock
+                    Pos=285,282,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowOne
+                    Pos=375,282,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3DestinationPlace
+                    Pos=405,282,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Sell
+                    Pos=600,282,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowTwo
+                    Pos=678,282,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3Profit
+                    Pos=710,282,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine3
+                    Pos=20,306,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4SourceSystem
+                    Pos=25,312,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4DestinationSystem
+                    Pos=405,312,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4SourcePlace
+                    Pos=25,330,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Buy
+                    Pos=210,330,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Stock
+                    Pos=285,330,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowOne
+                    Pos=375,330,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4DestinationPlace
+                    Pos=405,330,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Sell
+                    Pos=600,330,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowTwo
+                    Pos=678,330,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4Profit
+                    Pos=710,330,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine4
+                    Pos=20,354,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5SourceSystem
+                    Pos=25,360,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5DestinationSystem
+                    Pos=405,360,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5SourcePlace
+                    Pos=25,378,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Buy
+                    Pos=210,378,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Stock
+                    Pos=285,378,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowOne
+                    Pos=375,378,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5DestinationPlace
+                    Pos=405,378,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Sell
+                    Pos=600,378,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowTwo
+                    Pos=678,378,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5Profit
+                    Pos=710,378,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine5
+                    Pos=20,402,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6SourceSystem
+                    Pos=25,408,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6DestinationSystem
+                    Pos=405,408,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6SourcePlace
+                    Pos=25,426,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Buy
+                    Pos=210,426,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Stock
+                    Pos=285,426,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowOne
+                    Pos=375,426,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6DestinationPlace
+                    Pos=405,426,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Sell
+                    Pos=600,426,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowTwo
+                    Pos=678,426,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6Profit
+                    Pos=710,426,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine6
+                    Pos=20,450,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7SourceSystem
+                    Pos=25,456,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7DestinationSystem
+                    Pos=405,456,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7SourcePlace
+                    Pos=25,474,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Buy
+                    Pos=210,474,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Stock
+                    Pos=285,474,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowOne
+                    Pos=375,474,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7DestinationPlace
+                    Pos=405,474,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Sell
+                    Pos=600,474,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowTwo
+                    Pos=678,474,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7Profit
+                    Pos=710,474,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine7
+                    Pos=20,498,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8SourceSystem
+                    Pos=25,504,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8DestinationSystem
+                    Pos=405,504,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8SourcePlace
+                    Pos=25,522,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Buy
+                    Pos=210,522,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Stock
+                    Pos=285,522,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowOne
+                    Pos=375,522,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8DestinationPlace
+                    Pos=405,522,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Sell
+                    Pos=600,522,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowTwo
+                    Pos=678,522,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8Profit
+                    Pos=710,522,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine8
+                    Pos=20,546,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9SourceSystem
+                    Pos=25,552,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9DestinationSystem
+                    Pos=405,552,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9SourcePlace
+                    Pos=25,570,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Buy
+                    Pos=210,570,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Stock
+                    Pos=285,570,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowOne
+                    Pos=375,570,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9DestinationPlace
+                    Pos=405,570,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Sell
+                    Pos=600,570,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowTwo
+                    Pos=678,570,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9Profit
+                    Pos=710,570,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine9
+                    Pos=20,594,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFEmptyText
+                    Pos=40,260,-2
+                    Size=880,60
+                    TextColor=230,180,70
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFPageText
+                    Pos=450,638,-2
+                    Size=80,30
+                    Text=1 / 1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateGoods
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateSort
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStatePage
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateMode
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateStar
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Modal=True
+                MouseBlocking=True
+                Name=MGFTablePanel
+                Panel ^{
+                    Frame ^{
+                        Color=70,130,150
+                        ColorFill=15,26,38
+                        Fill=True
+                        Kind=Rect
+                        Name=MGFTableFill
+                        Pos=0,0,3
+                        Size=960,680
+                    }
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableBackground
+                    Pos=0,0,15
+                    Size=960,680
+                }
+                Pos=500,200,-250
+                Size=960,680
+                Style=Style.Window.2Normal
+            }
+        }
+    }
+    StarMap ^{
+        Panel ^{
+            Image ~{
+                Active=False
+                Image=GI,Bm.FHD_Trade.TableBackground
+                MouseBlocking=False
+                Name=MGFHUDFrame
+                Pos=0,0,-251
+                Size=998,776
+            }
+            MarketGoodsFinderSpaceButton ^{
+                Panel ^{
+                    GraphButton ^{
+                        Caption=
+                        CaptionAlignX=Center
+                        CaptionAlignY=CenterEx
+                        CaptionColorDown=255,255,230
+                        CaptionColorDownA=255,255,230
+                        CaptionColorNormal=255,255,230
+                        CaptionColorNormalA=255,255,230
+                        Font=Font.2SmallBold
+                        Help=Help.ButMarketGoodsFinder
+                        ImageDown=GI,Bm.FHD_Trade.2SearchD
+                        ImageNormal=GI,Bm.FHD_Trade.2SearchN
+                        ImageNormalA=GI,Bm.FHD_Trade.2SearchA
+                        Kind=Normal
+                        KindHit=Rect
+                        MouseBlocking=True
+                        MouseBlockingTest=False
+                        Name=MarketGoodsFinderSpaceButtonAction
+                        OnPressCode ~{
+                            00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.OpenMenu'),'form_name','StarMap');
+                        }
+                        Pos=0,0,-1
+                        Size=40,40
+                        Style=Style.GB.SoundNormal
+                    }
+                    Name=MarketGoodsFinderSpaceButton
+                    Pos=0,20,-100
+                    Size=40,40
+                }
+            }
+            Window ^{
+                Active=False
+                GraphButton ^{
+                    Caption=А-Я
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortAlpha
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortAlpha
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortAlpha'),'form_name','StarMap');
+                    }
+                    Pos=22,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=ПРИБЫЛЬ
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFSortProfit
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFSortProfit
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortProfit'),'form_name','StarMap');
+                    }
+                    Pos=116,642,-3
+                    Size=70,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=НОВЫЙ ПОИСК
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.ButMarketGoodsFinder
+                    ImageDown=GI,Bm.FHD_Trade.2FindD
+                    ImageNormal=GI,Bm.FHD_Trade.2FindN
+                    ImageNormalA=GI,Bm.FHD_Trade.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MarketGoodsFinderSpaceButtonAction
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.OpenMenu'),'form_name','StarMap');
+                    }
+                    Pos=210,642,-3
+                    Size=100,25
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageLeft
+                    ImageDown=GI,Bm.FormCount2.2SubD
+                    ImageNormal=GI,Bm.FormCount2.2SubN
+                    ImageNormalA=GI,Bm.FormCount2.2SubA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageLeft
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageLeft'),'form_name','StarMap');
+                    }
+                    Pos=424,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Help=Help.MGFPageRight
+                    ImageDown=GI,Bm.FormCount2.2AddD
+                    ImageNormal=GI,Bm.FormCount2.2AddN
+                    ImageNormalA=GI,Bm.FormCount2.2AddA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFPageRight
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageRight'),'form_name','StarMap');
+                    }
+                    Pos=535,644,-3
+                    Size=21,21
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2SmallBold
+                    Help=Help.MGFTableClose
+                    ImageDown=GI,Bm.FormCount2.2CloseD
+                    ImageNormal=GI,Bm.FormCount2.2CloseN
+                    ImageNormalA=GI,Bm.FormCount2.2CloseA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableClose
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Close'),'form_name','StarMap');
+                    }
+                    Pos=878,642,-3
+                    Size=58,26
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction0
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',0);
+                    }
+                    Pos=875,131,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction1
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',1);
+                    }
+                    Pos=875,179,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction2
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',2);
+                    }
+                    Pos=875,227,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction3
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',3);
+                    }
+                    Pos=875,275,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction4
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',4);
+                    }
+                    Pos=875,323,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction5
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',5);
+                    }
+                    Pos=875,371,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction6
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',6);
+                    }
+                    Pos=875,419,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction7
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',7);
+                    }
+                    Pos=875,467,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction8
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',8);
+                    }
+                    Pos=875,515,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                GraphButton ^{
+                    Caption=i
+                    CaptionAlignX=Center
+                    CaptionAlignY=CenterEx
+                    CaptionColorDown=255,255,230
+                    CaptionColorDownA=255,255,230
+                    CaptionColorNormal=255,255,230
+                    CaptionColorNormalA=255,255,230
+                    Font=Font.2Ranger
+                    Help=Help.MGFMarkRoute
+                    ImageDown=GI,Bm.FormInfo2.2FindD
+                    ImageNormal=GI,Bm.FormInfo2.2FindN
+                    ImageNormalA=GI,Bm.FormInfo2.2FindA
+                    Kind=Normal
+                    KindHit=Rect
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFAction9
+                    OnPressCode ~{
+                        00=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','StarMap','row_index',9);
+                    }
+                    Pos=875,563,-3
+                    Size=45,28
+                    Style=Style.GB.SoundNormal
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Ranger
+                    Name=MGFTitle
+                    Pos=20,8,-2
+                    Size=920,30
+                    Text=СИСТЕМНЫЙ ТОРГОВЫЙ МОНИТОР
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFGoodsStatus
+                    Pos=24,44,-2
+                    Size=460,25
+                    Text=Товар: -
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Right
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFFoundStatus
+                    Pos=510,44,-2
+                    Size=420,25
+                    Text=Найдено: 0 вариантов
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourceSystem
+                    Pos=25,72,-2
+                    Size=350,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationSystem
+                    Pos=405,72,-2
+                    Size=300,20
+                    Text=СИСТЕМА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSourcePlace
+                    Pos=25,92,-2
+                    Size=180,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderBuy
+                    Pos=210,92,-2
+                    Size=72,20
+                    Text=ПОКУПКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderStock
+                    Pos=285,92,-2
+                    Size=88,20
+                    Text=НАЛИЧИЕ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowOne
+                    Pos=375,92,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderDestinationPlace
+                    Pos=405,92,-2
+                    Size=190,20
+                    Text=ПЛАНЕТА / СТАНЦИЯ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderSell
+                    Pos=600,92,-2
+                    Size=75,20
+                    Text=ПРОДАЖА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderArrowTwo
+                    Pos=678,92,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderProfit
+                    Pos=710,92,-2
+                    Size=140,20
+                    Text=ПРИБЫЛЬ
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFHeaderMark
+                    Pos=858,92,-2
+                    Size=79,20
+                    Text=МЕТКА
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFHeaderLine
+                    Pos=20,108,-2
+                    Size=920,12
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0SourceSystem
+                    Pos=25,120,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0DestinationSystem
+                    Pos=405,120,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0SourcePlace
+                    Pos=25,138,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Buy
+                    Pos=210,138,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Stock
+                    Pos=285,138,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowOne
+                    Pos=375,138,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0DestinationPlace
+                    Pos=405,138,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0Sell
+                    Pos=600,138,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow0ArrowTwo
+                    Pos=678,138,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow0Profit
+                    Pos=710,138,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine0
+                    Pos=20,162,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1SourceSystem
+                    Pos=25,168,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1DestinationSystem
+                    Pos=405,168,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1SourcePlace
+                    Pos=25,186,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Buy
+                    Pos=210,186,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Stock
+                    Pos=285,186,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowOne
+                    Pos=375,186,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1DestinationPlace
+                    Pos=405,186,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1Sell
+                    Pos=600,186,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow1ArrowTwo
+                    Pos=678,186,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow1Profit
+                    Pos=710,186,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine1
+                    Pos=20,210,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2SourceSystem
+                    Pos=25,216,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2DestinationSystem
+                    Pos=405,216,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2SourcePlace
+                    Pos=25,234,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Buy
+                    Pos=210,234,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Stock
+                    Pos=285,234,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowOne
+                    Pos=375,234,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2DestinationPlace
+                    Pos=405,234,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2Sell
+                    Pos=600,234,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow2ArrowTwo
+                    Pos=678,234,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow2Profit
+                    Pos=710,234,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine2
+                    Pos=20,258,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3SourceSystem
+                    Pos=25,264,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3DestinationSystem
+                    Pos=405,264,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3SourcePlace
+                    Pos=25,282,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Buy
+                    Pos=210,282,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Stock
+                    Pos=285,282,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowOne
+                    Pos=375,282,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3DestinationPlace
+                    Pos=405,282,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3Sell
+                    Pos=600,282,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow3ArrowTwo
+                    Pos=678,282,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow3Profit
+                    Pos=710,282,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine3
+                    Pos=20,306,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4SourceSystem
+                    Pos=25,312,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4DestinationSystem
+                    Pos=405,312,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4SourcePlace
+                    Pos=25,330,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Buy
+                    Pos=210,330,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Stock
+                    Pos=285,330,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowOne
+                    Pos=375,330,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4DestinationPlace
+                    Pos=405,330,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4Sell
+                    Pos=600,330,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow4ArrowTwo
+                    Pos=678,330,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow4Profit
+                    Pos=710,330,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine4
+                    Pos=20,354,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5SourceSystem
+                    Pos=25,360,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5DestinationSystem
+                    Pos=405,360,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5SourcePlace
+                    Pos=25,378,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Buy
+                    Pos=210,378,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Stock
+                    Pos=285,378,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowOne
+                    Pos=375,378,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5DestinationPlace
+                    Pos=405,378,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5Sell
+                    Pos=600,378,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow5ArrowTwo
+                    Pos=678,378,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow5Profit
+                    Pos=710,378,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine5
+                    Pos=20,402,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6SourceSystem
+                    Pos=25,408,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6DestinationSystem
+                    Pos=405,408,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6SourcePlace
+                    Pos=25,426,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Buy
+                    Pos=210,426,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Stock
+                    Pos=285,426,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowOne
+                    Pos=375,426,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6DestinationPlace
+                    Pos=405,426,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6Sell
+                    Pos=600,426,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow6ArrowTwo
+                    Pos=678,426,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow6Profit
+                    Pos=710,426,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine6
+                    Pos=20,450,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7SourceSystem
+                    Pos=25,456,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7DestinationSystem
+                    Pos=405,456,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7SourcePlace
+                    Pos=25,474,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Buy
+                    Pos=210,474,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Stock
+                    Pos=285,474,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowOne
+                    Pos=375,474,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7DestinationPlace
+                    Pos=405,474,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7Sell
+                    Pos=600,474,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow7ArrowTwo
+                    Pos=678,474,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow7Profit
+                    Pos=710,474,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine7
+                    Pos=20,498,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8SourceSystem
+                    Pos=25,504,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8DestinationSystem
+                    Pos=405,504,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8SourcePlace
+                    Pos=25,522,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Buy
+                    Pos=210,522,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Stock
+                    Pos=285,522,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowOne
+                    Pos=375,522,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8DestinationPlace
+                    Pos=405,522,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8Sell
+                    Pos=600,522,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow8ArrowTwo
+                    Pos=678,522,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow8Profit
+                    Pos=710,522,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine8
+                    Pos=20,546,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9SourceSystem
+                    Pos=25,552,-2
+                    Size=350,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9DestinationSystem
+                    Pos=405,552,-2
+                    Size=300,18
+                    TextColor=88,229,255
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9SourcePlace
+                    Pos=25,570,-2
+                    Size=180,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Buy
+                    Pos=210,570,-2
+                    Size=72,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Stock
+                    Pos=285,570,-2
+                    Size=88,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowOne
+                    Pos=375,570,-2
+                    Size=25,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9DestinationPlace
+                    Pos=405,570,-2
+                    Size=190,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9Sell
+                    Pos=600,570,-2
+                    Size=75,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRow9ArrowTwo
+                    Pos=678,570,-2
+                    Size=28,20
+                    Text=->
+                    TextColor=255,215,100
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFRow9Profit
+                    Pos=710,570,-2
+                    Size=140,20
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFRowLine9
+                    Pos=20,594,-2
+                    Size=920,8
+                    Text=--------------------------------------------------------------------------------------------
+                    TextColor=70,110,125
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2SmallBold
+                    Name=MGFEmptyText
+                    Pos=40,260,-2
+                    Size=880,60
+                    TextColor=230,180,70
+                }
+                Label ~{
+                    AlignX=Center
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFPageText
+                    Pos=450,638,-2
+                    Size=80,30
+                    Text=1 / 1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateGoods
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateSort
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStatePage
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateMode
+                    Pos=0,0
+                    Size=1,1
+                    Text=1
+                    TextColor=255,255,230
+                }
+                Label ~{
+                    Active=False
+                    AlignX=Left
+                    AlignY=CenterEx
+                    Font=Font.2Small
+                    Name=MGFStateStar
+                    Pos=0,0
+                    Size=1,1
+                    Text=0
+                    TextColor=255,255,230
+                }
+                Modal=True
+                MouseBlocking=True
+                Name=MGFTablePanel
+                Panel ^{
+                    Frame ^{
+                        Color=70,130,150
+                        ColorFill=15,26,38
+                        Fill=True
+                        Kind=Rect
+                        Name=MGFTableFill
+                        Pos=0,0,3
+                        Size=960,680
+                    }
+                    MouseBlocking=True
+                    MouseBlockingTest=False
+                    Name=MGFTableBackground
+                    Pos=0,0,15
+                    Size=960,680
+                }
+                Pos=0,0,-250
+                Size=960,680
+                Style=Style.Window.2Normal
+            }
+        }
+    }
+}

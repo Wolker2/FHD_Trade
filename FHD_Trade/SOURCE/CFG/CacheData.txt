@@ -1,0 +1,17 @@
+Bm {
+    FHD_Trade {
+        2CloseA=Mods\FHD_MODS\FHD_Trade\Data\Image\2CloseA.gi
+        2CloseD=Mods\FHD_MODS\FHD_Trade\Data\Image\2CloseD.gi
+        2CloseN=Mods\FHD_MODS\FHD_Trade\Data\Image\2CloseN.gi
+        2FindA=Mods\FHD_MODS\FHD_Trade\Data\Image\2FindA.gi
+        2FindD=Mods\FHD_MODS\FHD_Trade\Data\Image\2FindD.gi
+        2FindN=Mods\FHD_MODS\FHD_Trade\Data\Image\2FindN.gi
+        2SearchA=Mods\FHD_MODS\FHD_Trade\Data\Image\2SearchA.gi
+        2SearchD=Mods\FHD_MODS\FHD_Trade\Data\Image\2SearchD.gi
+        2SearchN=Mods\FHD_MODS\FHD_Trade\Data\Image\2SearchN.gi
+        MarkerBase=Mods\FHD_MODS\FHD_Trade\Data\Image\Arrows.gi
+        MarkerBuy=Mods\FHD_MODS\FHD_Trade\Data\Image\leftButton_A.gi
+        MarkerSell=Mods\FHD_MODS\FHD_Trade\Data\Image\rightButton_A.gi
+        TableBackground=Mods\FHD_MODS\FHD_Trade\Data\Image\leftButton_N.gi
+    }
+}

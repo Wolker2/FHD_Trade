@@ -1,0 +1,22 @@
+Name=FHD_Trade
+Section=FHD_MODS
+Author=Prolog_D
+Dependence=
+Conflict=EvoFreeInflation,EvoNoInflation
+Priority=1
+Languages=Rus
+SmallDescription=<color=0,132,15>Системный Торговый Монитор</color>
+SmallDescription=<color=255,215,0>ver.6.5 AutoMap</color>
+SmallDescription=Поиск торговых маршрутов, наличие товара, сортировка и графические метки покупки и продажи.
+SmallDescription=(Мод можно <color=0,150,15>подключать</color>/<color=150,0,15>отключать</color> в любой момент игры)
+FullDescription=Ищет роскошь, технику, оружие, наркотики, алкоголь, медикаменты и еду в открытых секторах, показывает цены и наличие. Поиск в выбранной системе сравнивает покупку на населенных планетах текущей системы с продажей на населенных планетах выбранной системы и в начале партии стоит 15 кредитов. Глобальный поиск трех самых выгодных маршрутов в начале стоит 100 кредитов. Стоимость обеих услуг автоматически растет со временем игры и достигает максимума примерно к 3327 году. Зеленая метка показывает место покупки, розовая - место продажи. Маршрут записывается в информационный трей.
+FullDescription=<color=0,132,15>(Легален)</color>
+SmallDescription=------------------------------------  <color=0,200,255>ENG</color>  ----------------------------------------
+FullDescription= ------------------------------------  <color=0,200,255>ENG</color>  ----------------------------------------
+Languages=Eng
+SmallDescription=<color=0,132,15>System Trade Monitor</color>
+SmallDescription=<color=255,215,0>ver.6.5 AutoMap</color>
+SmallDescription=Search for trade routes, item availability, sorting, and graphical buy and sell markers.
+SmallDescription=(The mod can be <color=0,150,15>enabled</color>/<color=150,0,15>disabled</color> at any time during the game)
+FullDescription=Searches for luxury goods, machinery, weapons, narcotics, alcohol, medicine, and food in open sectors, displaying prices and availability. Searching in a selected system compares buying on populated planets in the current system with selling on populated planets in the selected system, and costs 15 credits at the start of the game. A global search for the three most profitable routes initially costs 100 credits. The cost of both services automatically increases over time, reaching its maximum around the year 3327. A green marker indicates the purchase location, and a pink marker indicates the sale location. The route is recorded in the information log.
+FullDescription=<color=0,132,15>(Legal)</color>
