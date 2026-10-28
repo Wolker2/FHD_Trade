@@ -1,0 +1,878 @@
+Help ~{
+    ButMarketGoodsFinder=Открыть Системный Торговый Монитор
+    MGFClearMarks=Снять все торговые метки с галактической карты
+    MGFMarkRoute=Поставить метки покупки и продажи на галактической карте.
+    MGFPageLeft=Предыдущая страница
+    MGFPageRight=Следующая страница
+    MGFSortAlpha=Сортировать по количеству товара, от большего запаса к меньшему
+    MGFSortProfit=Сортировать маршруты по прибыли, от большей к меньшей
+    MGFTableClose=Закрыть Системный Торговый Монитор
+    MGFGoodsTab0=Роскошь: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab0Selected=Роскошь: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab1=Техника: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab1Selected=Техника: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab2=Оружие: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab2Selected=Оружие: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab3=Наркотики: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab3Selected=Наркотики: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab4=Алкоголь: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab4Selected=Алкоголь: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab5=Медикаменты: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab5Selected=Медикаменты: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab6=Еда: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab6Selected=Еда: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+    MGFGoodsTab7=Минералы: показать сделки этого товара. Повторное нажатие вернёт все товары.
+    MGFGoodsTab7Selected=Минералы: фильтр включён. Нажмите, чтобы показать все выбранные товары.
+}
+Script ^{
+    MarketGoodsFinder ^{
+        BestPrices ~{
+            01=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Open'),'form_name',form_name,'search_mode',1,'star_id',0);
+        }
+        Markers ^{
+            Clear ^{
+                01=int slot=0;
+                02=for(slot=0;slot<10;slot=slot+1)
+                03 ~{
+                    01=InterfaceState('Galaxy','MGFBuyMark'+slot,0);
+                    02=InterfaceState('Galaxy','MGFSellMark'+slot,0);
+                }
+                04=InterfaceText('Galaxy','MGFMarkerNext','0');
+            }
+            Place ^{
+                01=dword markerStar=0;
+                02=dword candidate=0;
+                03=int i=0;
+                04=for(i=0;i<GalaxyStars();i=i+1)
+                05 ~{
+                    01=candidate=GalaxyStar(i);
+                    02=if(!candidate)continue;
+                    03=if(Id(candidate)==star_id)markerStar=candidate;
+                }
+                06=if(!markerStar)exit;
+                07=float x=CoordX(markerStar)*100;
+                08=x=x/150;
+                09=x=x*768;
+                10=x=x/100;
+                11=float y=CoordY(markerStar)*527;
+                12=y=y/100;
+                13=str markerName='MGFBuyMark'+slot;
+                14=if(marker_kind==1)markerName='MGFSellMark'+slot;
+                15=InterfacePos('Galaxy',markerName,-40+x+CoordX(markerStar)/5+x_offset,-40+y,0);
+                16=InterfaceState('Galaxy',markerName,1);
+            }
+        }
+        ConfirmServiceRow ~{
+            000=int currentService=0+CustomInterfaceText('MGFServiceSelected');
+            001=if(currentService<0 || currentService>2)currentService=0;
+            002=CloseCustomForm(10+currentService);
+        }
+        InitServiceMenu ~{
+            000=int tradeTurn=CurTurn();int localCost=15;int neededCost=50;int bestCost=100;
+            001=if(tradeTurn>=1825){localCost=25;neededCost=85;bestCost=170;}
+            002=if(tradeTurn>=3650){localCost=45;neededCost=150;bestCost=300;}
+            003=if(tradeTurn>=5475){localCost=80;neededCost=300;bestCost=550;}
+            004=if(tradeTurn>=7300){localCost=140;neededCost=500;bestCost=900;}
+            005=if(tradeTurn>=9125){localCost=220;neededCost=850;bestCost=1500;}
+            006=if(tradeTurn>=9855){localCost=250;neededCost=1000;bestCost=1700;}
+            007=CustomInterfaceText('MGFServiceLabel0','Поиск товара по системе ('+localCost+' cr)');
+            008=CustomInterfaceText('MGFServiceLabel1','Нужный товар ('+neededCost+' cr)');
+            009=CustomInterfaceText('MGFServiceLabel2','Выгодное предложение ('+bestCost+' cr)');
+            010=CustomInterfaceText('MGFServiceSelected','0');
+            011=CustomInterfaceState('MGFServiceSel0',1);
+            012=CustomInterfaceState('MGFServiceSel1',0);
+            013=CustomInterfaceState('MGFServiceSel2',0);
+        }
+        NeededGoods ~{
+            000=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.SearchSystemMode'),'form_name',form_name,'search_mode',2);
+        }
+        OpenMenu ~{
+            000=int choice=OpenCustomForm('FHDTradeServiceMenu');
+            001=if(choice==10)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Search'),'form_name',form_name);
+            002=else if(choice==11)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.NeededGoods'),'form_name',form_name);
+            003=else if(choice==12)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.BestPrices'),'form_name',form_name);
+        }
+        SelectServiceRow ~{
+            000=int currentService=0+CustomInterfaceText('MGFServiceSelected');
+            001=if(currentService==service_index){CloseCustomForm(10+service_index);exit;}
+            002=CustomInterfaceText('MGFServiceSelected',''+service_index);
+            003=CustomInterfaceState('MGFServiceSel0',service_index==0);
+            004=CustomInterfaceState('MGFServiceSel1',service_index==1);
+            005=CustomInterfaceState('MGFServiceSel2',service_index==2);
+        }
+        Search ~{
+            000=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.SearchSystemMode'),'form_name',form_name,'search_mode',0);
+        }
+        SearchSystemMode ^{
+            01=unknown starObjects=newarray(1);
+            02=unknown starNames=newarray(1);
+            03=int starCount=0;
+            04=int i=0;
+            05=dword star=0;
+            06=for(i=0;i<GalaxyStars();i=i+1)
+            07 ^{
+                01=star=GalaxyStar(i);
+                02=if(!star)continue;
+                03=if(!SectorVisible(StarToCon(star)))continue;if(StarOwner(star)==1 || StarCustomFaction(star)=='Klissan')continue;str starDisplay=StarName(star);if(StarCustomFaction(star)=='Klissan')starDisplay=starDisplay+' (К)';else if(StarOwner(star)==1)starDisplay=starDisplay+' (Д)';else if(StarOwner(star)==2)starDisplay=starDisplay+' (П)';
+                04=if(!starCount)
+                05 ~{
+                    01=starObjects[0]=star;
+                    02=starNames[0]=starDisplay;
+                    03=starCount=1;
+                }
+                06=else
+                07 ~{
+                    01=ArrayAdd(starObjects,star);
+                    02=ArrayAdd(starNames,starDisplay);
+                    03=starCount=starCount+1;
+                }
+            }
+            08=if(!starCount)
+            09 ~{
+                01=free(starObjects);
+                02=free(starNames);
+                03=MessageBox('Нет доступных систем. Сначала откройте хотя бы один сектор.');
+                04=exit;
+            }
+            10=if(starCount>1)
+            11 ^{
+                01=int sortPass=0;
+                02=int sortIndex=0;
+                03=int charIndex=0;
+                04=int leftLength=0;
+                05=int rightLength=0;
+                06=int compareLength=0;
+                07=int leftCode=0;
+                08=int rightCode=0;
+                09=int shouldSwap=0;
+                10=str leftName='';
+                11=str rightName='';
+                12=str swapName='';
+                13=dword swapStar=0;
+                14=for(sortPass=0;sortPass<starCount-1;sortPass=sortPass+1)
+                15 ^{
+                    01=for(sortIndex=0;sortIndex<starCount-sortPass-1;sortIndex=sortIndex+1)
+                    02 ^{
+                        01=leftName=lowercase(starNames[sortIndex]);
+                        02=rightName=lowercase(starNames[sortIndex+1]);
+                        03=leftLength=count(leftName);
+                        04=rightLength=count(rightName);
+                        05=compareLength=leftLength;
+                        06=if(rightLength<compareLength)compareLength=rightLength;
+                        07=shouldSwap=0;
+                        08=charIndex=0;
+                        09=while(charIndex<compareLength)
+                        10 ~{
+                            01=leftCode=ord(substr(leftName,charIndex,1));
+                            02=rightCode=ord(substr(rightName,charIndex,1));
+                            03=if(leftCode==1105)leftCode=2155;
+                            04=else if(leftCode==184)leftCode=459;
+                            05=else leftCode=leftCode*2;
+                            06=if(rightCode==1105)rightCode=2155;
+                            07=else if(rightCode==184)rightCode=459;
+                            08=else rightCode=rightCode*2;
+                            09=if(leftCode<rightCode)break;
+                            10=if(leftCode>rightCode){shouldSwap=1;break;}
+                            11=charIndex=charIndex+1;
+                        }
+                        11=if(!shouldSwap && charIndex==compareLength && leftLength>rightLength)shouldSwap=1;
+                        12=if(shouldSwap)
+                        13 ~{
+                            01=swapName=starNames[sortIndex];
+                            02=starNames[sortIndex]=starNames[sortIndex+1];
+                            03=starNames[sortIndex+1]=swapName;
+                            04=swapStar=starObjects[sortIndex];
+                            05=starObjects[sortIndex]=starObjects[sortIndex+1];
+                            06=starObjects[sortIndex+1]=swapStar;
+                        }
+                    }
+                }
+            }
+            12=int starIndex=ListBox('Выберите открытую систему для поиска:',starNames);
+            13=if(starIndex<0)
+            14 ~{
+                01=free(starObjects);
+                02=free(starNames);
+                03=exit;
+            }
+            15=star=starObjects[starIndex];
+            16=int starId=Id(star);
+            17=free(starObjects);
+            18=free(starNames);
+            19=dword playerStar=ShipStar(Player());
+            20=if(!playerStar)
+            21 ~{
+                01=MessageBox('Невозможно определить текущую систему. Повторите поиск после входа в систему.');
+                02=exit;
+            }
+            22=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Open'),'form_name',form_name,'search_mode',search_mode,'star_id',starId);
+        }
+        Table ^{
+            BuildLocalRows ^{
+                01=unknown rows=newarray(1);
+                02=unknown profitKeys=newarray(1);
+                03=int i=0;
+                04=int j=0;
+                05=int k=0;
+                06=dword sourceStar=ShipStar(Player());
+                07=dword destinationStar=0;
+                08=dword candidateStar=0;
+                09=dword sourcePlace=0;int sourceKind=0;
+                10=dword destinationPlace=0;int destinationKind=0;
+                11=int purchasePrice=0;
+                12=int salePrice=0;
+                13=int quantity=0;
+                14=int profit=0;
+                15=str route='';
+                16=str packedRow='';
+                17=for(i=0;i<GalaxyStars();i=i+1)
+                18 ~{
+                    01=candidateStar=GalaxyStar(i);
+                    02=if(!candidateStar)continue;
+                    03=if(!SectorVisible(StarToCon(candidateStar)))continue;if(StarOwner(candidateStar)==1 || StarCustomFaction(candidateStar)=='Klissan')continue;
+                    04=if(filter_star_id>0 && Id(candidateStar)==filter_star_id)destinationStar=candidateStar;
+                }
+                19=if(sourceStar){if(StarOwner(sourceStar)==1 || StarCustomFaction(sourceStar)=='Klissan')sourceStar=0;}if(sourceStar && destinationStar)
+                20 ^{
+                    01=for(j=0;j<StarPlanets(sourceStar)+StarRuins(sourceStar);j=j+1)
+                    02 ^{
+                        01=sourceKind=0;if(j<StarPlanets(sourceStar))sourcePlace=StarPlanets(sourceStar,j);else{sourceKind=1;sourcePlace=StarRuins(sourceStar,j-StarPlanets(sourceStar));}
+                        02=if(!sourcePlace)continue;if(sourceKind==1){str sourceStationType=ShipType(sourcePlace);if(sourceStationType=='PlayerMB' || sourceStationType=='PlayerMB_licensed' || sourceStationType=='CB' || sourceStationType=='DomRuins')continue;}
+                        03=if(sourceKind==0){if(PlanetOwner(sourcePlace)==5 || PlanetOwner(sourcePlace)==6)continue;}
+                        04=purchasePrice=GoodsBuyPrice(sourcePlace,goods_type);
+                        05=quantity=GoodsAdd(sourcePlace,goods_type,0);
+                        06=if(purchasePrice<=0 || quantity<30)continue;if(sourceKind==1 && quantity<100)continue;
+                        07=for(k=0;k<StarPlanets(destinationStar)+StarRuins(destinationStar);k=k+1)
+                        08 ~{
+                            01=destinationKind=0;if(k<StarPlanets(destinationStar))destinationPlace=StarPlanets(destinationStar,k);else{destinationKind=1;destinationPlace=StarRuins(destinationStar,k-StarPlanets(destinationStar));}
+                            02=if(!destinationPlace)continue;if(destinationKind==1){str destinationStationType=ShipType(destinationPlace);if(destinationStationType=='PlayerMB' || destinationStationType=='PlayerMB_licensed' || destinationStationType=='CB' || destinationStationType=='DomRuins')continue;}
+                            03=if(sourcePlace==destinationPlace)continue;
+                            04=if(destinationKind==0){if(PlanetOwner(destinationPlace)==5 || PlanetOwner(destinationPlace)==6)continue;}
+                            05=salePrice=GoodsSellPrice(destinationPlace,goods_type);
+                            06=if(salePrice<=0)continue;
+                            07=profit=salePrice-purchasePrice;if(destinationKind==1 && profit<=0)continue;
+                            08=route=Name(sourcePlace)+' ['+StarName(sourceStar)+'] -> '+Name(destinationPlace)+' ['+StarName(destinationStar)+']';
+                            09=packedRow=StarName(sourceStar)+'$'+Name(sourcePlace)+'$'+StarName(destinationStar)+'$'+Name(destinationPlace)+'$'+route+'$'+purchasePrice+'$'+salePrice+'$'+profit+'$'+sourceKind+'$'+Id(sourcePlace)+'$'+Id(sourceStar)+'$'+destinationKind+'$'+Id(destinationPlace)+'$'+Id(destinationStar)+'$'+quantity;
+                            10=ArrayAdd(rows,packedRow);
+                            11=ArrayAdd(profitKeys,-profit);
+                        }
+                    }
+                }
+                21=ArrayDelete(rows,0);
+                22=ArrayDelete(profitKeys,0);
+                23=if(sort_mode==0 && ArrayDim(rows)>1)
+                24 ^{
+                    01=unknown quantityKeys=newarray(1);
+                    02=for(i=0;i<ArrayDim(rows);i=i+1){
+                    03=int rowQuantity=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',rows[i],'field_index',14,'result');
+                    04=ArrayAdd(quantityKeys,-rowQuantity);}
+                    05=ArrayDelete(quantityKeys,0);
+                    06=ArraySort(quantityKeys,rows);
+                    07=free(quantityKeys);
+                }
+                25=else if(ArrayDim(rows)>1)ArraySort(profitKeys,rows);
+                26=free(profitKeys);
+            }
+            BuildNeededRows ~{
+                000=unknown rows=newarray(1);int i=0;int j=0;int k=0;dword sourceStar=ShipStar(Player());dword destinationStar=0;dword candidateStar=0;
+                001=dword sourcePlace=0;int sourceKind=0;dword destinationPlace=0;int destinationKind=0;int purchasePrice=0;int salePrice=0;int quantity=0;int profit=0;
+                002=int bestProfit=0;int bestBuyPrice=0;int bestSellPrice=0;int bestQty=0;str bestPackedRow='';str route='';str sourceStationType='';str destinationStationType='';
+                003=for(i=0;i<GalaxyStars();i=i+1){candidateStar=GalaxyStar(i);if(!candidateStar)continue;if(!SectorVisible(StarToCon(candidateStar)))continue;if(StarOwner(candidateStar)==1 || StarCustomFaction(candidateStar)=='Klissan')continue;if(filter_star_id>0 && Id(candidateStar)==filter_star_id)destinationStar=candidateStar;}
+                004=if(sourceStar){if(StarOwner(sourceStar)==1 || StarCustomFaction(sourceStar)=='Klissan')sourceStar=0;}
+                005=if(sourceStar && destinationStar){
+                006=for(j=0;j<StarPlanets(sourceStar)+StarRuins(sourceStar);j=j+1){
+                007=sourceKind=0;if(j<StarPlanets(sourceStar))sourcePlace=StarPlanets(sourceStar,j);else{sourceKind=1;sourcePlace=StarRuins(sourceStar,j-StarPlanets(sourceStar));}
+                008=if(!sourcePlace)continue;if(sourceKind==1){sourceStationType=ShipType(sourcePlace);if(sourceStationType=='PlayerMB' || sourceStationType=='PlayerMB_licensed' || sourceStationType=='CB' || sourceStationType=='DomRuins')continue;}
+                009=if(sourceKind==0){if(PlanetOwner(sourcePlace)==5 || PlanetOwner(sourcePlace)==6)continue;}
+                010=purchasePrice=GoodsBuyPrice(sourcePlace,goods_type);quantity=GoodsAdd(sourcePlace,goods_type,0);
+                011=if(purchasePrice<=0 || quantity<30)continue;if(sourceKind==1 && quantity<100)continue;
+                012=for(k=0;k<StarPlanets(destinationStar)+StarRuins(destinationStar);k=k+1){
+                013=destinationKind=0;if(k<StarPlanets(destinationStar))destinationPlace=StarPlanets(destinationStar,k);else{destinationKind=1;destinationPlace=StarRuins(destinationStar,k-StarPlanets(destinationStar));}
+                014=if(!destinationPlace)continue;if(destinationKind==1){destinationStationType=ShipType(destinationPlace);if(destinationStationType=='PlayerMB' || destinationStationType=='PlayerMB_licensed' || destinationStationType=='CB' || destinationStationType=='DomRuins')continue;}
+                015=if(sourcePlace==destinationPlace)continue;if(destinationKind==0){if(PlanetOwner(destinationPlace)==5 || PlanetOwner(destinationPlace)==6)continue;}
+                016=salePrice=GoodsSellPrice(destinationPlace,goods_type);if(salePrice<=0)continue;
+                017=profit=salePrice-purchasePrice;if(profit<=0)continue;
+                018=if(bestPackedRow=='' || profit>bestProfit || (profit==bestProfit && purchasePrice<bestBuyPrice) || (profit==bestProfit && purchasePrice==bestBuyPrice && salePrice>bestSellPrice) || (profit==bestProfit && purchasePrice==bestBuyPrice && salePrice==bestSellPrice && quantity>bestQty)){
+                019=bestProfit=profit;bestBuyPrice=purchasePrice;bestSellPrice=salePrice;bestQty=quantity;
+                020=route=Name(sourcePlace)+' ['+StarName(sourceStar)+'] -> '+Name(destinationPlace)+' ['+StarName(destinationStar)+']';
+                021=bestPackedRow=StarName(sourceStar)+'$'+Name(sourcePlace)+'$'+StarName(destinationStar)+'$'+Name(destinationPlace)+'$'+route+'$'+purchasePrice+'$'+salePrice+'$'+profit+'$'+sourceKind+'$'+Id(sourcePlace)+'$'+Id(sourceStar)+'$'+destinationKind+'$'+Id(destinationPlace)+'$'+Id(destinationStar)+'$'+quantity;}
+                022=}}}
+                023=if(bestPackedRow!='')ArrayAdd(rows,bestPackedRow);
+                024=ArrayDelete(rows,0);
+            }
+            BuildRows ^{
+                01=unknown rows=newarray(1);
+                02=unknown profitKeys=newarray(1);
+                03=dword bestPlace=0;
+                04=dword bestStar=0;
+                05=int bestPlaceKind=0;
+                06=int bestSalePrice=0;
+                07=dword secondPlace=0;
+                08=dword secondStar=0;
+                09=int secondPlaceKind=0;
+                10=int secondSalePrice=0;
+                11=int i=0;
+                12=int j=0;
+                13=dword star=0;
+                14=dword place=0;
+                15=int salePrice=0;str tradeStationType='';
+                16=for(i=0;i<GalaxyStars();i=i+1)
+                17 ^{
+                    01=star=GalaxyStar(i);
+                    02=if(!star)continue;
+                    03=if(!SectorVisible(StarToCon(star)))continue;
+                    04=if(StarOwner(star)==1 || StarCustomFaction(star)=='Klissan')continue;
+                    05=for(j=0;j<StarPlanets(star);j=j+1)
+                    06 ^{
+                        01=place=StarPlanets(star,j);
+                        02=if(!place)continue;
+                        03=if(PlanetOwner(place)==5 || PlanetOwner(place)==6)continue;
+                        04=salePrice=GoodsSellPrice(place,goods_type);
+                        05=if(salePrice>0 && (!bestPlace || salePrice>bestSalePrice))
+                        06 ~{
+                            01=secondPlace=bestPlace;
+                            02=secondStar=bestStar;
+                            03=secondPlaceKind=bestPlaceKind;
+                            04=secondSalePrice=bestSalePrice;
+                            05=bestPlace=place;
+                            06=bestStar=star;
+                            07=bestPlaceKind=0;
+                            08=bestSalePrice=salePrice;
+                        }
+                        07=else if(salePrice>0 && (!secondPlace || salePrice>secondSalePrice))
+                        08 ~{
+                            01=secondPlace=place;
+                            02=secondStar=star;
+                            03=secondPlaceKind=0;
+                            04=secondSalePrice=salePrice;
+                        }
+                    }
+                    07=for(j=0;j<StarRuins(star);j=j+1)
+                    08 ^{
+                        01=place=StarRuins(star,j);
+                        02=if(!place)continue;tradeStationType=ShipType(place);if(tradeStationType=='PlayerMB' || tradeStationType=='PlayerMB_licensed' || tradeStationType=='CB' || tradeStationType=='DomRuins')continue;
+                        04=salePrice=GoodsSellPrice(place,goods_type);
+                        05=if(salePrice>0 && (!bestPlace || salePrice>bestSalePrice))
+                        06 ~{
+                            01=secondPlace=bestPlace;
+                            02=secondStar=bestStar;
+                            03=secondPlaceKind=bestPlaceKind;
+                            04=secondSalePrice=bestSalePrice;
+                            05=bestPlace=place;
+                            06=bestStar=star;
+                            07=bestPlaceKind=1;
+                            08=bestSalePrice=salePrice;
+                        }
+                        07=else if(salePrice>0 && (!secondPlace || salePrice>secondSalePrice))
+                        08 ~{
+                            01=secondPlace=place;
+                            02=secondStar=star;
+                            03=secondPlaceKind=1;
+                            04=secondSalePrice=salePrice;
+                        }
+                    }
+                }
+                18=if(bestPlace)
+                19 ^{
+                    01=int sourceKind=0;
+                    02=int quantity=0;
+                    03=int purchasePrice=0;
+                    04=int profit=0;
+                    05=str route='';
+                    06=str packedRow='';
+                    07=dword destinationPlace=0;
+                    08=dword destinationStar=0;
+                    09=int destinationKind=0;
+                    10=int destinationPrice=0;
+                    11=for(i=0;i<GalaxyStars();i=i+1)
+                    12 ^{
+                        01=star=GalaxyStar(i);
+                        02=if(!star)continue;
+                        03=if(!SectorVisible(StarToCon(star)))continue;
+                        04=if(StarOwner(star)==1 || StarCustomFaction(star)=='Klissan')continue;
+                        05=if(filter_star_id>0 && Id(star)!=filter_star_id)continue;
+                        06=for(j=0;j<StarPlanets(star);j=j+1)
+                        07 ^{
+                            01=place=StarPlanets(star,j);
+                            02=if(!place)continue;
+                            03=if(PlanetOwner(place)==5 || PlanetOwner(place)==6)continue;
+                            04=quantity=GoodsAdd(place,goods_type,0);
+                            05=purchasePrice=GoodsBuyPrice(place,goods_type);
+                            06=if(quantity<30 || purchasePrice<=0)continue;
+                            07=destinationPlace=bestPlace;
+                            08=destinationStar=bestStar;
+                            09=destinationKind=bestPlaceKind;
+                            10=destinationPrice=bestSalePrice;
+                            11=if(place==bestPlace)
+                            12 ~{
+                                01=destinationPlace=secondPlace;
+                                02=destinationStar=secondStar;
+                                03=destinationKind=secondPlaceKind;
+                                04=destinationPrice=secondSalePrice;
+                            }
+                            13=if(!destinationPlace)continue;
+                            14=profit=destinationPrice-purchasePrice;
+                            15=if(profit<=0)continue;
+                            16=sourceKind=0;
+                            17=route=Name(place)+' ['+StarName(star)+'] -> '+Name(destinationPlace)+' ['+StarName(destinationStar)+']';
+                            18=packedRow=StarName(star)+'$'+Name(place)+'$'+StarName(destinationStar)+'$'+Name(destinationPlace)+'$'+route+'$'+purchasePrice+'$'+destinationPrice+'$'+profit+'$'+sourceKind+'$'+Id(place)+'$'+Id(star)+'$'+destinationKind+'$'+Id(destinationPlace)+'$'+Id(destinationStar)+'$'+quantity;
+                            19=ArrayAdd(rows,packedRow);
+                            20=ArrayAdd(profitKeys,-profit);
+                        }
+                        08=for(j=0;j<StarRuins(star);j=j+1)
+                        09 ^{
+                            01=place=StarRuins(star,j);
+                            02=if(!place)continue;tradeStationType=ShipType(place);if(tradeStationType=='PlayerMB' || tradeStationType=='PlayerMB_licensed' || tradeStationType=='CB' || tradeStationType=='DomRuins')continue;
+                            04=quantity=GoodsAdd(place,goods_type,0);
+                            05=purchasePrice=GoodsBuyPrice(place,goods_type);
+                            06=if(quantity<=0 || purchasePrice<=0)continue;if(quantity<100)continue;
+                            07=destinationPlace=bestPlace;
+                            08=destinationStar=bestStar;
+                            09=destinationKind=bestPlaceKind;
+                            10=destinationPrice=bestSalePrice;
+                            11=if(place==bestPlace)
+                            12 ~{
+                                01=destinationPlace=secondPlace;
+                                02=destinationStar=secondStar;
+                                03=destinationKind=secondPlaceKind;
+                                04=destinationPrice=secondSalePrice;
+                            }
+                            13=if(!destinationPlace)continue;
+                            14=profit=destinationPrice-purchasePrice;
+                            15=if(profit<=0)continue;
+                            16=sourceKind=1;
+                            17=route=Name(place)+' ['+StarName(star)+'] -> '+Name(destinationPlace)+' ['+StarName(destinationStar)+']';
+                            18=packedRow=StarName(star)+'$'+Name(place)+'$'+StarName(destinationStar)+'$'+Name(destinationPlace)+'$'+route+'$'+purchasePrice+'$'+destinationPrice+'$'+profit+'$'+sourceKind+'$'+Id(place)+'$'+Id(star)+'$'+destinationKind+'$'+Id(destinationPlace)+'$'+Id(destinationStar)+'$'+quantity;
+                            19=ArrayAdd(rows,packedRow);
+                            20=ArrayAdd(profitKeys,-profit);
+                        }
+                    }
+                }
+                20=ArrayDelete(rows,0);
+                21=ArrayDelete(profitKeys,0);
+                22=if(ArrayDim(rows)>1)ArraySort(profitKeys,rows);
+                23=if(search_mode==1 && ArrayDim(rows)>3)
+                24 ~{
+                    01=for(i=ArrayDim(rows)-1;i>=3;i=i-1)ArrayDelete(rows,i);
+                }
+                25=if(sort_mode==0 && ArrayDim(rows)>1)
+                26 ^{
+                    01=unknown quantityKeys=newarray(1);
+                    02=for(i=0;i<ArrayDim(rows);i=i+1){
+                    03=int rowQuantity=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',rows[i],'field_index',14,'result');
+                    04=ArrayAdd(quantityKeys,-rowQuantity);}
+                    05=ArrayDelete(quantityKeys,0);
+                    06=ArraySort(quantityKeys,rows);
+                    07=free(quantityKeys);
+                }
+                27=free(profitKeys);
+            }
+            BuildRowsForMode ~{
+                01=unknown rows;
+                02=if(search_mode==0)rows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildLocalRows'),'goods_type',goods_type,'sort_mode',sort_mode,'filter_star_id',filter_star_id,'rows');
+                03=else if(search_mode==2)rows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildNeededRows'),'goods_type',goods_type,'filter_star_id',filter_star_id,'rows');
+                04=else rows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildRows'),'goods_type',goods_type,'sort_mode',sort_mode,'filter_star_id',filter_star_id,'search_mode',search_mode,'rows');
+            }
+            BuildSelectedRows ~{
+                000=unknown rows=newarray(1);unknown profitKeys=newarray(1);unknown seen=newarray(8);int init=0;for(init=0;init<8;init=init+1)seen[init]=0;
+                001=int slot=0;int maxSlots=3;if(search_mode==1)maxSlots=8;else if(search_mode==2)maxSlots=7;int selectedIndex=0;int goodsType=0;int r=0;int profit=0;int trimRow=0;str pick='';str selectedName='';str taggedRow='';unknown goodsRows;
+                002=for(slot=0;slot<maxSlots;slot=slot+1){
+                003=pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goods_selection,'field_index',slot,'result');if(pick=='')break;
+                004=selectedIndex=0+pick;if(selectedIndex<0 || selectedIndex>7)continue;if(search_mode==2 && selectedIndex>6)continue;if(seen[selectedIndex]==1)continue;seen[selectedIndex]=1;
+                005=goodsType=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ResolveGoods'),'goods_index',selectedIndex,'goodsType');
+                006=selectedName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ResolveGoods'),'goods_index',selectedIndex,'goodsName');
+                007=goodsRows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildRowsForMode'),'goods_type',goodsType,'sort_mode',1,'filter_star_id',filter_star_id,'search_mode',search_mode,'rows');
+                008=for(r=0;r<ArrayDim(goodsRows);r=r+1){taggedRow=goodsRows[r]+'$'+selectedIndex+'$'+selectedName;ArrayAdd(rows,taggedRow);
+                009=profit=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',taggedRow,'field_index',7,'result');ArrayAdd(profitKeys,-profit);}
+                010=free(goodsRows);}free(seen);
+                011=ArrayDelete(rows,0);ArrayDelete(profitKeys,0);if(ArrayDim(rows)>1)ArraySort(profitKeys,rows);free(profitKeys);if(search_mode==1 && ArrayDim(rows)>3){for(trimRow=ArrayDim(rows)-1;trimRow>=3;trimRow=trimRow-1)ArrayDelete(rows,trimRow);}
+                012=if(sort_mode==0 && ArrayDim(rows)>1){unknown quantityKeys=newarray(1);int sortRow=0;int rowQuantity=0;
+                013=for(sortRow=0;sortRow<ArrayDim(rows);sortRow=sortRow+1){rowQuantity=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',rows[sortRow],'field_index',14,'result');ArrayAdd(quantityKeys,-rowQuantity);}
+                014=ArrayDelete(quantityKeys,0);ArraySort(quantityKeys,rows);free(quantityKeys);}
+            }
+            Close ~{
+                01=InterfaceState(form_name,'MGFTablePanel',0);if(form_name=='StarMap')InterfaceState('StarMap','MGFHUDFrame',0);if(form_name=='StarMap')InterfaceState('StarMap','MGFTableRoot',0);
+            }
+            Field ^{
+                01=str rest=packed;
+                02=str result='';
+                03=int part=0;
+                04=int separator=-1;
+                05=for(part=0;part<=field_index;part=part+1)
+                06 ^{
+                    01=separator=findsubstr(rest,'$');
+                    02=if(part==field_index)
+                    03 ~{
+                        01=if(separator<0)result=rest;
+                        02=else result=substr(rest,0,separator);
+                    }
+                    04=if(separator<0)rest='';
+                    05=else rest=substr(rest,separator+1);
+                }
+            }
+            FillShopForm ~{
+                001=CustomInterfaceText('MGFTitle',InterfaceText('GoodsShop','MGFTitle'));
+                002=CustomInterfaceText('MGFGoodsStatus',InterfaceText('GoodsShop','MGFGoodsStatus'));
+                003=CustomInterfaceText('MGFFoundStatus',InterfaceText('GoodsShop','MGFFoundStatus'));
+                004=CustomInterfaceText('MGFPageText',InterfaceText('GoodsShop','MGFPageText'));
+                005=CustomInterfaceText('MGFEmptyText',InterfaceText('GoodsShop','MGFEmptyText'));
+                006=CustomInterfaceState('MGFPageLeft',InterfaceState('GoodsShop','MGFPageLeft')==1);
+                007=CustomInterfaceState('MGFPageRight',InterfaceState('GoodsShop','MGFPageRight')==1);
+                008=for(int r=0;r<10;r=r+1)
+                009={
+                010=int hasRow=InterfaceText('GoodsShop','MGFRow'+r+'SourceSystem')!='';
+                011=CustomInterfaceText('MGFRow'+r+'SourceSystem',InterfaceText('GoodsShop','MGFRow'+r+'SourceSystem'));
+                012=CustomInterfaceText('MGFRow'+r+'SourcePlace',InterfaceText('GoodsShop','MGFRow'+r+'SourcePlace'));
+                013=CustomInterfaceText('MGFRow'+r+'Buy',InterfaceText('GoodsShop','MGFRow'+r+'Buy'));
+                014=CustomInterfaceText('MGFRow'+r+'Stock',InterfaceText('GoodsShop','MGFRow'+r+'Stock'));
+                015=CustomInterfaceText('MGFRow'+r+'DestinationSystem',InterfaceText('GoodsShop','MGFRow'+r+'DestinationSystem'));
+                016=CustomInterfaceText('MGFRow'+r+'DestinationPlace',InterfaceText('GoodsShop','MGFRow'+r+'DestinationPlace'));
+                017=CustomInterfaceText('MGFRow'+r+'Sell',InterfaceText('GoodsShop','MGFRow'+r+'Sell'));
+                018=CustomInterfaceText('MGFRow'+r+'Profit',InterfaceText('GoodsShop','MGFRow'+r+'Profit'));
+                019=CustomInterfaceState('MGFAction'+r,hasRow);
+                020=CustomInterfaceState('MGFRow'+r+'ArrowOne',hasRow);
+                021=CustomInterfaceState('MGFRow'+r+'ArrowTwo',hasRow);
+                022=CustomInterfaceState('MGFRowLine'+r,hasRow);
+                023=}
+                024=str goodsSelection=InterfaceText('GoodsShop','MGFStateGoods');str filterRaw=InterfaceText('GoodsShop','MGFStateFilter');int filterIndex=-1;if(filterRaw!='' && filterRaw!='-1')filterIndex=0+InterfaceText('GoodsShop','MGFStateFilter');for(int tabSlot=0;tabSlot<3;tabSlot=tabSlot+1){str tabName='MGFGoodsTab'+tabSlot;CustomInterfaceState(tabName,InterfaceState('GoodsShop',tabName)==1);str pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goodsSelection,'field_index',tabSlot,'result');if(pick!=''){int selectedIndex=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goodsSelection,'field_index',tabSlot,'result');if(selectedIndex>=0 && selectedIndex<=7){str tabStyle='Style:FHDTradeGoodsTabStyles.Goods'+selectedIndex+'N';if(filterIndex==selectedIndex)tabStyle='Style:FHDTradeGoodsTabStyles.Goods'+selectedIndex+'S';CustomInterfaceImage(tabName,tabStyle);}}}
+            }
+            GoodsSummary ~{
+                000=str summary='';str pick='';str selectedName='';int slot=0;int selectedIndex=0;unknown seen=newarray(8);int init=0;for(init=0;init<8;init=init+1)seen[init]=0;
+                001=for(slot=0;slot<8;slot=slot+1){
+                002=pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goods_selection,'field_index',slot,'result');if(pick=='')break;
+                003=selectedIndex=0+pick;if(selectedIndex<0 || selectedIndex>7)continue;if(seen[selectedIndex]==1)continue;seen[selectedIndex]=1;
+                004=selectedName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ResolveGoods'),'goods_index',selectedIndex,'goodsName');
+                005=if(summary!='')summary=summary+', ';summary=summary+selectedName;}
+                006=free(seen);
+            }
+            MarkRoute ^{
+                00=int marked=0;
+                01=str goodsSelection=InterfaceText(form_name,'MGFStateGoods');str visibleSelection=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.VisibleSelection'),'form_name',form_name,'selection');
+                02=int sortMode=0+InterfaceText(form_name,'MGFStateSort');
+                03=int page=0+InterfaceText(form_name,'MGFStatePage');
+                04=int searchMode=0+InterfaceText(form_name,'MGFStateMode');
+                05=int filterStarId=0+InterfaceText(form_name,'MGFStateStar');
+                06=str goodsName='';
+                08=unknown rows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildSelectedRows'),'goods_selection',visibleSelection,'sort_mode',sortMode,'filter_star_id',filterStarId,'search_mode',searchMode,'rows');
+                09=int selectedIndex=page*10+row_index;
+                10=if(selectedIndex<0 || selectedIndex>=ArrayDim(rows))
+                11 ~{
+                    01=free(rows);
+                    02=exit;
+                }
+                12=str packedRow=rows[selectedIndex];goodsName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',16,'result');
+                13=str route=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',4,'result');
+                14=int buyPrice=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',5,'result');
+                15=int sellPrice=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',6,'result');
+                16=int profit=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',7,'result');
+                17=int sourceKind=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',8,'result');
+                18=int sourceId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',9,'result');
+                19=int sourceStarId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',10,'result');
+                20=int destinationKind=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',11,'result');
+                21=int destinationId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',12,'result');
+                22=int destinationStarId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',13,'result');
+                23=int quantity=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',14,'result');
+                24=dword sourcePlace=0;
+                25=dword destinationPlace=0;
+                26=if(sourceKind==0 && sourceId>0)sourcePlace=IdToPlanet(sourceId);
+                27=else if(sourceId>1)sourcePlace=IdToShip(sourceId);
+                28=if(destinationKind==0 && destinationId>0)destinationPlace=IdToPlanet(destinationId);
+                29=else if(destinationId>1)destinationPlace=IdToShip(destinationId);
+                30=if(!sourcePlace || !destinationPlace || sourceStarId<=0 || destinationStarId<=0)
+                31 ~{
+                    01=free(rows);
+                    02=MessageBox('Маршрут устарел. Выполните поиск заново.');
+                    03=exit;
+                }
+                32=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Markers.Clear'));int markerSlot=0+InterfaceText('Galaxy','MGFMarkerNext');
+                33=if(markerSlot<0 || markerSlot>=10)markerSlot=0;
+                34=InterfaceState('Galaxy','MGFBuyMark'+markerSlot,0);
+                35=InterfaceState('Galaxy','MGFSellMark'+markerSlot,0);
+                36=int sourceOffset=0;
+                37=int destinationOffset=0;
+                38=if(sourceStarId==destinationStarId)
+                39 ~{
+                    01=sourceOffset=-12;
+                    02=destinationOffset=12;
+                }
+                40=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Markers.Place'),'star_id',sourceStarId,'slot',markerSlot,'marker_kind',0,'x_offset',sourceOffset);
+                41=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Markers.Place'),'star_id',destinationStarId,'slot',markerSlot,'marker_kind',1,'x_offset',destinationOffset);
+                42=markerSlot=markerSlot+1;
+                43=if(markerSlot>=10)markerSlot=0;
+                44=InterfaceText('Galaxy','MGFMarkerNext',''+markerSlot);marked=1;
+                45=str trayText='<color=0,180,230>Торговый маршрут: '+goodsName+'</color><br>'+route+'<br>Купить: '+buyPrice+' cr | продать: '+sellPrice+' cr<br>Прибыль с единицы: '+profit+' cr | запас: '+quantity;
+                46=Ether(7,'',trayText,sourcePlace,destinationPlace);
+                47=InterfaceState(form_name,'MGFTablePanel',0);if(form_name=='StarMap')InterfaceState('StarMap','MGFHUDFrame',0);if(form_name=='StarMap')InterfaceState('StarMap','MGFTableRoot',0);
+                48=MessageBox('Зеленая метка показывает покупку, розовая - продажу. Маршрут сохранен в информационном трее.',69);
+                49=free(rows);
+            }
+            Open ^{
+                01=str goodsSelection='';if(search_mode==1)goodsSelection='0$1$2$3$4$5$6$7';else if(search_mode==2)goodsSelection='0$1$2$3$4$5$6';else goodsSelection=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SelectGoods'),'selection');
+                02=if(goodsSelection=='')exit;
+                13=int tradeTurn=CurTurn();int cost=15;if(tradeTurn>=1825)cost=25;if(tradeTurn>=3650)cost=45;if(tradeTurn>=5475)cost=80;if(tradeTurn>=7300)cost=140;if(tradeTurn>=9125)cost=220;if(tradeTurn>=9855)cost=250;
+                14=if(search_mode==1){cost=100;if(tradeTurn>=1825)cost=170;if(tradeTurn>=3650)cost=300;if(tradeTurn>=5475)cost=550;if(tradeTurn>=7300)cost=900;if(tradeTurn>=9125)cost=1500;if(tradeTurn>=9855)cost=1700;}else if(search_mode==2){cost=50;if(tradeTurn>=1825)cost=85;if(tradeTurn>=3650)cost=150;if(tradeTurn>=5475)cost=300;if(tradeTurn>=7300)cost=500;if(tradeTurn>=9125)cost=850;if(tradeTurn>=9855)cost=1000;}
+                15=int money=ShipMoney(Player());
+                16=if(money<cost)
+                17 ~{
+                    01=MessageBox('Недостаточно кредитов. Нужно '+cost+' cr, у вас '+money+' cr.');
+                    02=exit;
+                }
+                18=ShipMoney(Player(),money-cost);
+                19=InterfaceText(form_name,'MGFStateGoods',goodsSelection);
+                20=InterfaceText(form_name,'MGFStateSort','1');
+                21=InterfaceText(form_name,'MGFStatePage','0');
+                22=InterfaceText(form_name,'MGFStateMode',''+search_mode);
+                23=InterfaceText(form_name,'MGFStateStar',''+star_id);
+                24=if(form_name=='StarMap'){int screenX=GetGameOptions('ResolutionX');int screenY=GetGameOptions('ResolutionY');InterfacePos('StarMap','MGFTableRoot',0,0,-250);InterfaceSize('StarMap','MGFTableRoot',screenX,screenY);InterfacePos('StarMap','MGFTablePanel',(screenX-960)/2,(screenY-680)/2,-250);InterfaceSize('StarMap','MGFHUDFrame',998,776);InterfacePos('StarMap','MGFHUDFrame',(screenX-998)/2,(screenY-776)/2,-251);InterfaceState('StarMap','MGFHUDFrame',1);InterfaceState('StarMap','MGFTablePanel',1);InterfaceState('StarMap','MGFTableRoot',1);}
+                25=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.RenderFresh'),'form_name',form_name,'goods_index',goodsSelection,'search_mode',search_mode,'star_id',star_id);if(form_name=='GoodsShop' && InterfaceState('GoodsShop','MGFStateStar')!=1){InterfaceState('GoodsShop','MGFTablePanel',0);ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ShowShopForm'));}
+            }
+            PageLeft ~{
+                01=int page=0+InterfaceText(form_name,'MGFStatePage');
+                02=InterfaceText(form_name,'MGFStatePage',''+max(0,page-1));
+                03=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            PageRight ~{
+                01=int page=0+InterfaceText(form_name,'MGFStatePage');
+                02=InterfaceText(form_name,'MGFStatePage',''+(page+1));
+                03=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            Render ^{
+                01=str goodsSelection=InterfaceText(form_name,'MGFStateGoods');str visibleSelection=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.VisibleSelection'),'form_name',form_name,'selection');
+                02=int sortMode=0+InterfaceText(form_name,'MGFStateSort');
+                03=int page=0+InterfaceText(form_name,'MGFStatePage');
+                04=int searchMode=0+InterfaceText(form_name,'MGFStateMode');
+                05=int filterStarId=0+InterfaceText(form_name,'MGFStateStar');
+                06=str goodsName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.GoodsSummary'),'goods_selection',visibleSelection,'summary');
+                08=unknown rows=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.BuildSelectedRows'),'goods_selection',visibleSelection,'sort_mode',sortMode,'filter_star_id',filterStarId,'search_mode',searchMode,'rows');
+                09=int rowCount=ArrayDim(rows);
+                10=int cards=10;
+                11=int totalPages=max(0,(rowCount-1)/cards);
+                12=page=max(0,min(page,totalPages));
+                13=InterfaceText(form_name,'MGFStatePage',''+page);
+                14=InterfaceText(form_name,'MGFEmptyText','');
+                15=int lineIndex=0;
+                16=int rowIndex=0;
+                17=str packedRow='';
+                18=str sourceSystem='';
+                19=str sourcePlace='';
+                20=str destinationSystem='';
+                21=str destinationPlace='';
+                22=str buyText='';
+                23=str sellText='';
+                24=str profitText='';
+                25=int profit=0;
+                26=int quantity=0;str rowGoodsName='';int sourceKind=0;int sourceId=0;int destinationKind=0;int destinationId=0;int rowGoodsIndex=0;int isContraband=0;int sourceIllegal=0;int destIllegal=0;str displayGoodsName='';str displaySourcePlace='';str displayDestPlace='';
+                27=for(lineIndex=0;lineIndex<cards;lineIndex=lineIndex+1)
+                28 ^{
+                    01=InterfaceText(form_name,'MGFRow'+lineIndex+'SourceSystem','');
+                    02=InterfaceText(form_name,'MGFRow'+lineIndex+'DestinationSystem','');
+                    03=InterfaceText(form_name,'MGFRow'+lineIndex+'SourcePlace','');
+                    04=InterfaceText(form_name,'MGFRow'+lineIndex+'Buy','');
+                    05=InterfaceText(form_name,'MGFRow'+lineIndex+'Stock','');
+                    06=InterfaceText(form_name,'MGFRow'+lineIndex+'DestinationPlace','');
+                    07=InterfaceText(form_name,'MGFRow'+lineIndex+'Sell','');
+                    08=InterfaceText(form_name,'MGFRow'+lineIndex+'Profit','');
+                    09=rowIndex=page*cards+lineIndex;
+                    10=if(rowIndex<rowCount)
+                    11 ^{
+                        01=packedRow=rows[rowIndex];
+                        02=sourceSystem=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',0,'result');
+                        03=sourcePlace=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',1,'result');
+                        04=destinationSystem=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',2,'result');
+                        05=destinationPlace=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',3,'result');
+                        06=buyText=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',5,'result');
+                        07=sellText=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',6,'result');
+                        08=profit=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',7,'result');
+                        09=quantity=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',14,'result');rowGoodsIndex=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',15,'result');rowGoodsName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',16,'result');sourceKind=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',8,'result');sourceId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',9,'result');destinationKind=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',11,'result');destinationId=0+ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',packedRow,'field_index',12,'result');isContraband=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.IsContraband'),'source_kind',sourceKind,'source_id',sourceId,'destination_kind',destinationKind,'destination_id',destinationId,'goods_index',rowGoodsIndex,'isContraband');sourceIllegal=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.IsContraband'),'source_kind',sourceKind,'source_id',sourceId,'destination_kind',destinationKind,'destination_id',destinationId,'goods_index',rowGoodsIndex,'sourceIllegal');destIllegal=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.IsContraband'),'source_kind',sourceKind,'source_id',sourceId,'destination_kind',destinationKind,'destination_id',destinationId,'goods_index',rowGoodsIndex,'destIllegal');displayGoodsName=rowGoodsName;if(isContraband)displayGoodsName='<color=235,80,60>'+rowGoodsName+'</color>';displaySourcePlace=sourcePlace;if(sourceIllegal)displaySourcePlace='<color=235,80,60>'+sourcePlace+'</color>';displayDestPlace=destinationPlace;if(destIllegal)displayDestPlace='<color=235,80,60>'+destinationPlace+'</color>';
+                        10=profitText='<color=0,220,60>+'+profit+' cr</color>';
+                        11=if(searchMode==0)
+                        12 ~{
+                            01=profitText=''+profit+' cr';
+                            02=if(profit>0)profitText='<color=0,220,60>+'+profit+' cr</color>';
+                            03=else if(profit<0)profitText='<color=235,80,60>'+profit+' cr</color>';
+                        }
+                        13=InterfaceText(form_name,'MGFRow'+lineIndex+'SourceSystem',''+(rowIndex+1)+' - '+displayGoodsName+' | '+sourceSystem);
+                        14=InterfaceText(form_name,'MGFRow'+lineIndex+'DestinationSystem',destinationSystem);
+                        15=InterfaceText(form_name,'MGFRow'+lineIndex+'SourcePlace',displaySourcePlace);
+                        16=InterfaceText(form_name,'MGFRow'+lineIndex+'Buy',buyText+' cr');
+                        17=InterfaceText(form_name,'MGFRow'+lineIndex+'Stock',''+quantity+' шт');
+                        18=InterfaceText(form_name,'MGFRow'+lineIndex+'DestinationPlace',displayDestPlace);
+                        19=InterfaceText(form_name,'MGFRow'+lineIndex+'Sell',sellText+' cr');
+                        20=InterfaceText(form_name,'MGFRow'+lineIndex+'Profit',profitText);
+                        21=InterfaceState(form_name,'MGFAction'+lineIndex,1);
+                        22=InterfaceState(form_name,'MGFRow'+lineIndex+'ArrowOne',1);
+                        23=InterfaceState(form_name,'MGFRow'+lineIndex+'ArrowTwo',1);
+                        24=InterfaceState(form_name,'MGFRowLine'+lineIndex,1);
+                    }
+                    12=else
+                    13 ~{
+                        01=InterfaceState(form_name,'MGFAction'+lineIndex,0);
+                        02=InterfaceState(form_name,'MGFRow'+lineIndex+'ArrowOne',0);
+                        03=InterfaceState(form_name,'MGFRow'+lineIndex+'ArrowTwo',0);
+                        04=InterfaceState(form_name,'MGFRowLine'+lineIndex,0);
+                    }
+                }
+                29=if(!rowCount)InterfaceText(form_name,'MGFEmptyText','Для выбранного товара прибыльных торговых маршрутов не найдено.');
+                30=str scopeText='';
+                31=int si=0;
+                32=dword scopeStar=0;
+                33=dword currentStar=ShipStar(Player());
+                34=if((searchMode==0 || searchMode==2) && filterStarId>0 && currentStar)
+                35 ^{
+                    01=for(si=0;si<GalaxyStars();si=si+1)
+                    02 ~{
+                        01=scopeStar=GalaxyStar(si);
+                        02=if(!scopeStar)continue;
+                        03=if(Id(scopeStar)==filterStarId)scopeText=' | Маршрут: '+StarName(currentStar)+' -> '+StarName(scopeStar);
+                    }
+                }
+                36=str sortName='ПРИБЫЛЬ';
+                37=if(sortMode==0)sortName='КОЛ-ВО';
+                38=InterfaceText(form_name,'MGFTitle','СИСТЕМНЫЙ ТОРГОВЫЙ МОНИТОР');
+                39=InterfaceText(form_name,'MGFGoodsStatus','Товары: '+goodsName+scopeText+' | Сортировка: '+sortName);
+                40=InterfaceText(form_name,'MGFFoundStatus','Найдено: '+rowCount+' вариантов');
+                41=InterfaceText(form_name,'MGFPageText',''+(page+1)+' / '+(totalPages+1));
+                42=InterfaceState(form_name,'MGFPageLeft',page>0);
+                43=InterfaceState(form_name,'MGFPageRight',page<totalPages);
+                44=free(rows);
+                45=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.UpdateGoodsTabs'),'form_name',form_name);
+            }
+            RenderFresh ~{
+                000=InterfaceText(form_name,'MGFStateGoods',''+goods_index);InterfaceText(form_name,'MGFStateSort','1');InterfaceText(form_name,'MGFStatePage','0');InterfaceText(form_name,'MGFStateFilter','-1');
+                001=InterfaceText(form_name,'MGFStateMode',''+search_mode);InterfaceText(form_name,'MGFStateStar',''+star_id);
+                002=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            ResolveGoods ^{
+                01=int goodsType=t_Luxury;
+                02=str goodsName='Роскошь';
+                03=if(goods_index==1)
+                04 ~{
+                    01=goodsType=t_Technics;
+                    02=goodsName='Техника';
+                }
+                05=else if(goods_index==2)
+                06 ~{
+                    01=goodsType=t_Arms;
+                    02=goodsName='Оружие';
+                }
+                07=else if(goods_index==3)
+                08 ~{
+                    01=goodsType=t_Narcotics;
+                    02=goodsName='Наркотики';
+                }
+                09=else if(goods_index==4)
+                10 ~{
+                    01=goodsType=t_Alcohol;
+                    02=goodsName='Алкоголь';
+                }
+                11=else if(goods_index==5)
+                12 ~{
+                    01=goodsType=t_Medicine;
+                    02=goodsName='Медикаменты';
+                }
+                13=else if(goods_index==6)
+                14 ~{
+                    01=goodsType=t_Food;
+                    02=goodsName='Еда';
+                }
+                15=else if(goods_index==7)
+                16 ~{
+                    01=goodsType=t_Minerals;
+                    02=goodsName='Минералы';
+                }
+            }
+            ConfirmPickGoods ~{
+                000=str selection='';int i=0;int pickedFlag=0;
+                001=for(i=0;i<8;i=i+1){pickedFlag=0+CustomInterfaceText('MGFGoodPicked'+i);if(pickedFlag==1){if(selection!='')selection=selection+'$';selection=selection+i;}}
+                002=if(selection==''){CustomInterfaceText('MGFGoodsPickStatus','<color=235,80,60>Выберите хотя бы 1 товар перед нажатием галочки!</color>');exit;}
+                003=InterfaceText('GoodsShop','MGFTempSelection',selection);
+                004=CloseCustomForm(1);
+            }
+            InitGoodsSelect ~{
+                000=int i=0;InterfaceText('GoodsShop','MGFTempSelection','');
+                001=for(i=0;i<8;i=i+1)CustomInterfaceText('MGFGoodPicked'+i,'0');
+                002=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.RefreshGoodsSelect'));
+            }
+            IsContraband ~{
+                000=int goodsType=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ResolveGoods'),'goods_index',goods_index,'goodsType');
+                001=int sourceIllegal=0;int destIllegal=0;int isContraband=0;dword srcPlanet=0;dword dstPlanet=0;
+                002=if(source_kind==0 && source_id>0){srcPlanet=IdToPlanet(source_id);if(srcPlanet){if(ShipGoodsIllegalOnPlanet(Player(),goodsType,srcPlanet))sourceIllegal=1;}}
+                003=if(destination_kind==0 && destination_id>0){dstPlanet=IdToPlanet(destination_id);if(dstPlanet){if(ShipGoodsIllegalOnPlanet(Player(),goodsType,dstPlanet))destIllegal=1;}}
+                004=if(sourceIllegal || destIllegal)isContraband=1;
+            }
+            RefreshGoodsSelect ~{
+                000=int i=0;int pickedFlag=0;int selectedCount=0;str optionName='';
+                001=for(i=0;i<8;i=i+1){pickedFlag=0+CustomInterfaceText('MGFGoodPicked'+i);if(pickedFlag==1)selectedCount=selectedCount+1;}
+                002=for(i=0;i<8;i=i+1){
+                003=pickedFlag=0+CustomInterfaceText('MGFGoodPicked'+i);
+                004=optionName=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ResolveGoods'),'goods_index',i,'goodsName');
+                005=if(pickedFlag==1){CustomInterfaceState('MGFGoodRowSel'+i,1);CustomInterfaceImage('MGFGoodIconBtn'+i,'Style:FHDTradeGoodsTabStyles.Goods'+i+'S');CustomInterfaceText('MGFGoodName'+i,'<color=120,255,170>'+optionName+'</color>');CustomInterfaceText('MGFGoodMark'+i,'<color=0,240,120>[V]</color>');}
+                006=else{CustomInterfaceState('MGFGoodRowSel'+i,0);CustomInterfaceImage('MGFGoodIconBtn'+i,'Style:FHDTradeGoodsTabStyles.Goods'+i+'N');CustomInterfaceText('MGFGoodName'+i,optionName);CustomInterfaceText('MGFGoodMark'+i,'[ ]');}}
+                007=CustomInterfaceText('MGFGoodsPickStatus','Отметьте от 1 до 3 товаров и нажмите галочку ('+selectedCount+' / 3)');
+            }
+            TogglePickGood ~{
+                000=if(good_index<0 || good_index>7)exit;
+                001=int i=0;int selectedCount=0;int currentFlag=0+CustomInterfaceText('MGFGoodPicked'+good_index);
+                002=for(i=0;i<8;i=i+1){if(0+CustomInterfaceText('MGFGoodPicked'+i)==1)selectedCount=selectedCount+1;}
+                003=if(currentFlag==1)CustomInterfaceText('MGFGoodPicked'+good_index,'0');
+                004=else if(selectedCount<3)CustomInterfaceText('MGFGoodPicked'+good_index,'1');
+                005=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.RefreshGoodsSelect'));
+            }
+            SelectGoods ~{
+                000=InterfaceText('GoodsShop','MGFTempSelection','');
+                001=int confirm=OpenCustomForm('FHDTradeGoodsSelect');
+                002=str selection='';
+                003=if(confirm==1)selection=InterfaceText('GoodsShop','MGFTempSelection');
+            }
+            ShowShopForm ~{
+                001=int keepOpen=1;
+                002=InterfaceState('GoodsShop','MGFStateStar',1);
+                003=while(keepOpen)
+                004={
+                005=int choice=OpenCustomForm('FHDTradeShopTable');
+                006=if(choice==101)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortAlpha'),'form_name','GoodsShop');
+                007=else if(choice==102)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.SortProfit'),'form_name','GoodsShop');
+                008=else if(choice==104)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageLeft'),'form_name','GoodsShop');
+                009=else if(choice==105)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.PageRight'),'form_name','GoodsShop');
+                010=else if(choice>=200 && choice<210){int marked=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.MarkRoute'),'form_name','GoodsShop','row_index',choice-200,'marked');if(marked)keepOpen=0;}
+                011=else if(choice==103)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.OpenMenu'),'form_name','GoodsShop');
+                012=else if(choice>=300 && choice<303)ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.ToggleGoodsFilter'),'form_name','GoodsShop','goods_slot',choice-300);
+                013=else keepOpen=0;
+                014=}
+                015=InterfaceState('GoodsShop','MGFStateStar',0);
+            }
+            SortAlpha ~{
+                01=InterfaceText(form_name,'MGFStateSort','0');
+                02=InterfaceText(form_name,'MGFStatePage','0');
+                03=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            SortProfit ~{
+                01=InterfaceText(form_name,'MGFStateSort','1');
+                02=InterfaceText(form_name,'MGFStatePage','0');
+                03=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            ToggleGoodsFilter ~{
+                000=if(goods_slot<0 || goods_slot>=3)exit;
+                001=str goodsSelection=InterfaceText(form_name,'MGFStateGoods');str pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goodsSelection,'field_index',goods_slot,'result');if(pick=='')exit;
+                002=int selectedIndex=0+pick;if(selectedIndex<0 || selectedIndex>7)exit;
+                003=str filterRaw=InterfaceText(form_name,'MGFStateFilter');int filterIndex=-1;if(filterRaw!='' && filterRaw!='-1')filterIndex=0+InterfaceText(form_name,'MGFStateFilter');if(filterIndex==selectedIndex)InterfaceText(form_name,'MGFStateFilter','-1');else InterfaceText(form_name,'MGFStateFilter',''+selectedIndex);
+                004=InterfaceText(form_name,'MGFStatePage','0');ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Render'),'form_name',form_name);
+            }
+            UpdateGoodsTabs ~{
+                000=str goodsSelection=InterfaceText(form_name,'MGFStateGoods');int searchMode=0+InterfaceText(form_name,'MGFStateMode');str filterRaw=InterfaceText(form_name,'MGFStateFilter');int filterIndex=-1;if(filterRaw!='' && filterRaw!='-1')filterIndex=0+InterfaceText(form_name,'MGFStateFilter');int slot=0;int selectedIndex=0;str pick='';str tabStyle='';str tabName='';
+                001=for(slot=0;slot<3;slot=slot+1){tabName='MGFGoodsTab'+slot;InterfaceState(form_name,tabName,0);if(searchMode!=0)continue;
+                002=pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goodsSelection,'field_index',slot,'result');if(pick=='')continue;
+                003=selectedIndex=0+pick;if(selectedIndex<0 || selectedIndex>7)continue;tabStyle='Style:FHDTradeGoodsTabStyles.Goods'+selectedIndex+'N';if(filterIndex==selectedIndex)tabStyle='Style:FHDTradeGoodsTabStyles.Goods'+selectedIndex+'S';
+                004=InterfaceImage(form_name,tabName,tabStyle);InterfaceState(form_name,tabName,1);}
+                005=if(form_name=='StarMap'){int tabsScreenX=GetGameOptions('ResolutionX');int tabsScreenY=GetGameOptions('ResolutionY');InterfacePos('StarMap','MGFGoodsTabsPanel',(tabsScreenX-960)/2+362,(tabsScreenY-680)/2-34,-252);InterfaceState('StarMap','MGFGoodsTabsPanel',searchMode==0 && InterfaceState('StarMap','MGFTablePanel')==1);}
+            }
+            VisibleSelection ~{
+                000=str goodsSelection=InterfaceText(form_name,'MGFStateGoods');str selection=goodsSelection;str filterRaw=InterfaceText(form_name,'MGFStateFilter');int filterIndex=-1;if(filterRaw!='' && filterRaw!='-1')filterIndex=0+InterfaceText(form_name,'MGFStateFilter');str pick='';int selectedIndex=0;int slot=0;int found=0;
+                001=if(filterIndex>=0 && filterIndex<8){for(slot=0;slot<3;slot=slot+1){
+                002=pick=ExecuteCodeFromString(GenerateCodeStringFromBlock('Script.MarketGoodsFinder.Table.Field'),'packed',goodsSelection,'field_index',slot,'result');if(pick=='')break;
+                003=selectedIndex=0+pick;if(selectedIndex==filterIndex){selection=pick;found=1;break;}}}
+                004=if(!found)InterfaceText(form_name,'MGFStateFilter','-1');
+            }
+        }
+    }
+}
