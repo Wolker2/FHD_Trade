@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/publish-fhd-trade-20.yml'
+      - '1FHD_Trade_v2.0_Nexus-GitHub/tools/nexus_source_export.py'
   workflow_dispatch:
 permissions:
   contents: write
