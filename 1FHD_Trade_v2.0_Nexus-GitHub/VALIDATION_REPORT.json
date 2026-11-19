@@ -6,12 +6,15 @@
   "original_files_in_source": 61,
   "text_or_code_files": 1,
   "byte_exact_DAT_to_JSON": 4,
-  "png_files": 0,
+  "png_files": 53,
   "data_loss_in_original_archive": false,
   "dll_source_recovered_from_compiled_binary": false,
   "game_tested": false,
   "warnings": [
-    "GI-to-PNG conversion unavailable for Data/Image: Ошибка: Нативный GI/PNG-кодек не обработал /tmp/tmp7i5lpwft/g0/leftButton_D.gi: GI frame type 1 пока доступен только для inspect/passthrough\n"
+    "Batch GI-to-PNG failed for Data/Image; individual conversion attempted: Ошибка: Нативный GI/PNG-кодек не обработал /tmp/tmp94c0dy7d/g0/leftButton_D.gi: GI frame type 1 пока доступен только для inspect/passthrough\n",
+    "GI conversion unsupported: leftButton_D.gi Ошибка: Нативный GI/PNG-кодек не обработал /tmp/tmp94c0dy7d/g0/leftButton_D.gi: GI frame type 1 пока доступен только для",
+    "GI conversion unsupported: rightButton_D.gi Ошибка: Нативный GI/PNG-кодек не обработал /tmp/tmp94c0dy7d/g0/rightButton_D.gi: GI frame type 1 пока доступен только дл",
+    "GI conversion unsupported: rightButton_N.gi Ошибка: Нативный GI/PNG-кодек не обработал /tmp/tmp94c0dy7d/g0/rightButton_N.gi: GI frame type 1 пока доступен только дл"
   ],
   "files": {
     "Mods/FHD_MODS/FHD_Trade/CFG/CacheData.dat": {
