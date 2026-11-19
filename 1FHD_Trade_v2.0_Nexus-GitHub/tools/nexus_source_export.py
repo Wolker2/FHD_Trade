@@ -111,7 +111,19 @@ def main():
                     else:
                         warnings.append("GI exported without valid PNG: "+filename)
             except Exception as e:
-                warnings.append("GI-to-PNG conversion unavailable for "+group+": "+str(e)[:200])
+                warnings.append("Batch GI-to-PNG failed for "+group+"; individual conversion attempted: "+str(e)[:160])
+                for filename,raw in values:
+                    try:
+                        one=subprocess.run([sys.executable,"-m","srhd_modkit","convert","gi-png",
+                                            str(inp/filename),"--output",str(out)],
+                                            capture_output=True,text=True,timeout=60)
+                        candidate=out/(Path(filename).stem+".png")
+                        if one.returncode or not candidate.is_file() or not candidate.read_bytes().startswith(b"\\x89PNG\\r\\n\\x1a\\n"):
+                            raise RuntimeError(one.stderr[-160:])
+                        value=str(candidate.relative_to(target))
+                        if value not in pngs: pngs.append(value)
+                    except Exception as single:
+                        warnings.append("GI conversion unsupported: "+filename+" "+str(single)[:120])
     report={"mod":a.mod,"source_archive":archive.name,"archive_sha256":a.sha256.lower(),
             "archive_file_count":len(allfiles),"original_files_in_source":len(copied),
             "text_or_code_files":len(original_text),"byte_exact_DAT_to_JSON":len(dat_json),
