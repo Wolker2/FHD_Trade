@@ -118,7 +118,7 @@ def main():
                                             str(inp/filename),"--output",str(out)],
                                             capture_output=True,text=True,timeout=60)
                         candidate=out/(Path(filename).stem+".png")
-                        if one.returncode or not candidate.is_file() or not candidate.read_bytes().startswith(b"\\x89PNG\\r\\n\\x1a\\n"):
+                        if one.returncode or not candidate.is_file() or not candidate.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
                             raise RuntimeError(one.stderr[-160:])
                         value=str(candidate.relative_to(target))
                         if value not in pngs: pngs.append(value)
