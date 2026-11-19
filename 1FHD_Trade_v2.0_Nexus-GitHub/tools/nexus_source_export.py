@@ -130,7 +130,7 @@ def main():
             "png_files":len(pngs),"data_loss_in_original_archive":False,
             "dll_source_recovered_from_compiled_binary":False,
             "game_tested":False,"warnings":warnings,"files":allfiles}
-    put(target/"VALIDATION_REPORT.json",(json.dumps(report,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))
+    (target/"VALIDATION_REPORT.json").write_bytes((json.dumps(report,indent=2,ensure_ascii=False)+"\n").encode("utf-8"))
     print("PASS: original ZIP SHA256; files:",len(allfiles),"source:",len(copied),
           "text/code:",len(original_text),"DAT JSON:",len(dat_json),"PNG:",len(pngs))
     for warning in warnings:print("NOTICE:",warning)
